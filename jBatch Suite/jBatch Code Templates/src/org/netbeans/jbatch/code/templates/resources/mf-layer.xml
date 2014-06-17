@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="Java_Batch">
+            <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.resources.Bundle#Templates/Java_Batch"/>
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/resources/Java_Batch.html"/>
+            <!--<attr name="position" intvalue="1052"/>-->
+            <file name="Batchlet.java" url="/org/netbeans/jbatch/code/templates/step/batchlet/resources/Batchlet.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.step.batchlet.resources.Bundle#Templates/Java_Batch/Batchlet.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/step/batchlet/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.step.batchlet.BatchletIterator"/>
+                <!--<attr name="templateCategory" stringvalue="web-types,j2ee-types"/>-->
+            </file>
+            <file name="ItemProcessor.java" url="/org/netbeans/jbatch/code/templates/step/chunk/processor/resources/ItemProcessor.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.step.chunk.processor.resources.Bundle#Templates/Java_Batch/ItemProcessor.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/step/chunk/processor/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.step.chunk.processor.ItemProcessorIterator"/>
+            </file>
+            
+             <file name="ItemReader.java" url="/org/netbeans/jbatch/code/templates/step/chunk/reader/resources/ItemReader.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.step.chunk.reader.resources.Bundle#Templates/Java_Batch/ItemReader.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/step/chunk/reader/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.step.chunk.reader.ItemReaderIterator"/>
+            </file>
+            <file name="ItemWriter.java" url="/org/netbeans/jbatch/code/templates/step/chunk/writer/resources/ItemWriter.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.step.chunk.writer.resources.Bundle#Templates/Java_Batch/ItemWriter.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/step/chunk/writer/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.step.chunk.writer.ItemWriterIterator"/>
+            </file>
+            <file name="CheckpointAlgorithm.java" url="/org/netbeans/jbatch/code/templates/step/chunk/checkpoint/resources/CheckpointAlgorithm.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.step.chunk.checkpoint.resources.Bundle#Templates/Java_Batch/CheckpointAlgorithm.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/step/chunk/checkpoint/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.step.chunk.checkpoint.CheckpointAlgorithmIterator"/>
+            </file>
+            
+            <file name="Decision.java" url="/org/netbeans/jbatch/code/templates/decision/resources/Decision.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.decision.resources.Bundle#Templates/Java_Batch/Decision.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/decision/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.decision.DecisionIterator"/>
+            </file>
+            
+<!--            <file name="RetryListener.java" url="/org/netbeans/jbatch/code/templates/listener/retry/resources/RetryListener.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.listener.retry.resources.Bundle#Templates/Java_Batch/RetryListener.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/listener/retry/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.listener.retry.RetryListenerIterator"/>
+            </file>
+             <file name="SkipListener.java" url="/org/netbeans/jbatch/code/templates/listener/skip/resources/SkipListener.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.listener.skip.resources.Bundle#Templates/Java_Batch/SkipListener.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/listener/skip/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.listener.skip.SkipListenerIterator"/>
+            </file>-->
+            
+            <file name="BatchListener.java" url="/org/netbeans/jbatch/code/templates/listener/resources/BatchListener.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.listener.resources.Bundle#Templates/Java_Batch/BatchListener.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/listener/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.listener.BatchListenerIterator"/>
+            </file>
+            <file name="Partition.java" url="/org/netbeans/jbatch/code/templates/parallelization/partition/resources/Partition.java.template">
+                <attr name="displayName" bundlevalue="org.netbeans.jbatch.code.templates.parallelization.partition.resources.Bundle#Templates/Java_Batch/Partition.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/jbatch/code/templates/parallelization/partition/resources/Description.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.jbatch.code.templates.parallelization.partition.PartitionIterator"/>
+            </file>
+            
+        </folder>
+    </folder>
+</filesystem>

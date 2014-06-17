@@ -1,0 +1,290 @@
+<#-- Copyright [2014] Gaurav Gupta
+ 
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+ 
+http://www.apache.org/licenses/LICENSE-2.0
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License. -->
+<#if (project.licensePath)??><#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}"></#if>
+<#if package?? && package != "">
+
+package ${package};
+</#if>
+<#if listener == "Job">
+import javax.batch.api.listener.JobListener;
+import javax.inject.Named;
+
+<#if user??>
+/**
+ *
+ * @author ${user}
+ */
+
+</#if>
+<#if named?has_content>
+@Named("${named}")
+<#else>
+@Named
+</#if>
+public class ${name} implements JobListener {
+
+    @Override
+    public void beforeJob() throws Exception {
+        System.out.println("beforeJob");
+    }
+
+    @Override
+    public void afterJob() throws Exception {
+        System.out.println("afterJob");
+    }
+}
+</#if>
+<#if listener == "Step">
+import javax.batch.api.listener.StepListener;
+import javax.inject.Named;
+
+/**
+ *
+ * @author ${user}
+ */
+<#if named?has_content>
+@Named("${named}")
+<#else>
+@Named
+</#if>
+public class ${name} implements StepListener {
+
+    @Override
+    public void beforeStep() throws Exception {
+        System.out.println("beforeStep");
+    }
+
+    @Override
+    public void afterStep() throws Exception {
+        System.out.println("afterStep");
+    }
+}
+</#if>
+<#if listener == "Chunk">
+import javax.batch.api.chunk.listener.ChunkListener;
+import javax.inject.Named;
+
+/**
+ *
+ * @author ${user}
+ */
+<#if named?has_content>
+@Named("${named}")
+<#else>
+@Named
+</#if>
+public class ${name} implements ChunkListener {
+
+    @Override    
+    public void beforeChunk() throws Exception {
+        System.out.println("beforeChunk");
+    }
+    
+    @Override  
+    public void afterChunk() throws Exception {
+        System.out.println("afterChunk");
+    }
+    
+    @Override 
+    public void onError(Exception ex) throws Exception {
+        System.out.println("onError : " + ex.toString());
+    }
+}
+</#if>
+<#if listener == "Item">
+<#assign interface = [] >
+<#if read == true>
+import javax.batch.api.chunk.listener.ItemReadListener;
+<#assign interface = interface + ["ItemReadListener"]>
+</#if>
+<#if process == true>
+import javax.batch.api.chunk.listener.ItemProcessListener;
+<#assign interface = interface + ["ItemProcessListener"] >
+</#if>
+<#if write == true>
+import javax.batch.api.chunk.listener.ItemWriteListener;
+import java.util.List;
+<#assign interface = interface + ["ItemWriteListener"] >
+</#if>
+import javax.inject.Named;
+
+/**
+ *
+ * @author ${user}
+ */
+<#if named?has_content>
+@Named("${named}")
+<#else>
+@Named
+</#if>
+public class ${name} implements <#list interface as x>${x}<#if x_has_next>, </#if></#list> {
+<#if read == true>
+
+    @Override    
+    public void beforeRead() throws Exception {
+        System.out.println("beforeRead");
+    }
+    
+    @Override  
+    public void afterRead(Object item) throws Exception {
+        System.out.println("afterRead");
+    }
+    
+    @Override 
+    public void onReadError(Exception ex) throws Exception {
+        System.out.println("onReadError : " + ex.toString());
+    }
+</#if>
+<#if process == true>
+
+    @Override
+    public void beforeProcess(Object item) throws Exception {
+        System.out.println("beforeProcess");
+    }
+
+    @Override
+    public void afterProcess(Object item, Object result) throws Exception {
+        System.out.println("afterProcess");
+    }
+
+    @Override
+    public void onProcessError(Object item, Exception ex) throws Exception {
+        System.out.println("onProcessError : " + ex.toString());
+    }
+</#if>
+<#if write == true>
+
+    @Override
+    public void beforeWrite(List<Object> items) throws Exception {
+        System.out.println("beforeWrite");
+    }
+
+    @Override
+    public void afterWrite(List<Object> items) throws Exception {
+        System.out.println("afterWrite");
+    }
+
+    @Override
+    public void onWriteError(List<Object> items, Exception ex) throws Exception {
+        System.out.println("onWriteError : " + ex.toString());
+    }
+</#if>
+
+}
+</#if>
+<#if listener == "Skip">
+<#assign interface = [] >
+<#if read == true>
+import javax.batch.api.chunk.listener.SkipReadListener;
+<#assign interface = interface + ["SkipReadListener"]>
+</#if>
+<#if process == true>
+import javax.batch.api.chunk.listener.SkipProcessListener;
+<#assign interface = interface + ["SkipProcessListener"] >
+</#if>
+<#if write == true>
+import javax.batch.api.chunk.listener.SkipWriteListener;
+import java.util.List;
+<#assign interface = interface + ["SkipWriteListener"] >
+</#if>
+import javax.inject.Named;
+
+/**
+ *
+ * @author ${user}
+ */
+<#if named?has_content>
+@Named("${named}")
+<#else>
+@Named
+</#if>
+public class ${name} implements <#list interface as x>${x}<#if x_has_next>, </#if></#list> {
+
+<#if read == true>
+    @Override
+    public void onSkipReadItem(Exception e) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+</#if>
+<#if process == true>
+
+    @Override
+    public void onSkipProcessItem(Object t, Exception e) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+</#if>
+<#if write == true>
+
+    @Override
+    public void onSkipWriteItem(List list, Exception e) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+</#if>
+
+}
+</#if>
+<#if listener == "Retry">
+<#assign interface = [] >
+<#if read == true>
+import javax.batch.api.chunk.listener.RetryReadListener;
+<#assign interface = interface + ["RetryReadListener"]>
+</#if>
+<#if process == true>
+import javax.batch.api.chunk.listener.RetryProcessListener;
+<#assign interface = interface + ["RetryProcessListener"] >
+</#if>
+<#if write == true>
+import javax.batch.api.chunk.listener.RetryWriteListener;
+import java.util.List;
+<#assign interface = interface + ["RetryWriteListener"] >
+</#if>
+import javax.inject.Named;
+
+/**
+ *
+ * @author ${user}
+ */
+<#if named?has_content>
+@Named("${named}")
+<#else>
+@Named
+</#if>
+public class ${name} implements <#list interface as x>${x}<#if x_has_next>, </#if></#list> {
+
+<#if read == true>
+    @Override
+    public void onRetryReadException(Exception ex) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+</#if>
+<#if process == true>
+
+    @Override
+    public void onRetryProcessException(Object item, Exception ex) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+</#if>
+<#if write == true>
+
+    @Override
+    public void onRetryWriteException(List<Object> items, Exception ex) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+</#if>
+
+}
+</#if>

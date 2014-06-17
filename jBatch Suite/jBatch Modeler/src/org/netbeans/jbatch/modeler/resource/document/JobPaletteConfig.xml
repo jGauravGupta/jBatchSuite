@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<palette-config id="JOB" name="Job Element" class="org.netbeans.jbatch.modeler.job.file.JobFileDataObject">
+    <category-node id="ACTIVITY" name="Activity" icon="/org/netbeans/jbatch/modeler/resource/element/batch/ACTIVITY_ICON.svg">
+        <subcategory-node  id="Batchlet_Activity" name="Batchlet" >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/BATCHLET_ICON.svg" width="39" height="32"/>
+        </subcategory-node>
+         <subcategory-node  id="Chunk_Activity" name="Chunk" >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/CHUNK_ICON.svg" width="39" height="32"/>
+        </subcategory-node>
+       
+    </category-node>
+    
+    <category-node id="GATEWAY" name="Gateway" icon="/org/netbeans/jbatch/modeler/resource/element/batch/GATEWAY_ICON.svg">
+        <subcategory-node  id="Decision_Gateway" name="Decision"  >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/DECISION.svg" width="32" height="32"/>
+        </subcategory-node>
+<!--        <subcategory-node  id="Split_Gateway" name="Split"  >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/SPLIT.svg" width="32" height="32"/>
+        </subcategory-node>-->
+    </category-node>
+</palette-config>

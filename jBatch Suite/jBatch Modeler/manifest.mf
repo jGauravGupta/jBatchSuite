@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.jbatch.modeler
+OpenIDE-Module-Localizing-Bundle: org/netbeans/jbatch/modeler/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

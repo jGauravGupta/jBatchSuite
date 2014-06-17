@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<document-config>
+    <documents>
+        <document id="Batchlet_Activity" widget="org.netbeans.jbatch.modeler.core.widget.BatchletWidget" specification="org.netbeans.jbatch.modeler.spec.Step" definition="Batchlet" documentModel="ACTIVITY" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/BATCHLET.svg</container-document>
+            <bounds>
+                <width value="80.0" min="60.0" max="298.0"/>
+                <height value="64.0" min="48.0" max="242.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="2.5"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(255,248,159)"/>
+                    <border color="RGB(30,69,123)" width="1.0"/>
+                </inner-shape>
+            </shape-design>
+        </document> 
+        <document id="Chunk_Activity" widget="org.netbeans.jbatch.modeler.core.widget.ChunkWidget" specification="org.netbeans.jbatch.modeler.spec.Step" definition="Chunk" documentModel="ACTIVITY" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/CHUNK.svg</container-document>
+            <bounds>
+                <width value="80.0" min="60.0" max="298.0"/>
+                <height value="64.0" min="48.0" max="242.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="2.5"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(255,248,159)"/>
+                    <border color="RGB(30,69,123)" width="1.0"/>
+                </inner-shape>
+            </shape-design>
+        </document> 
+              
+        <document id="Decision_Gateway" widget="org.netbeans.jbatch.modeler.core.widget.DecisionGatewayWidget" specification="org.netbeans.jbatch.modeler.spec.Decision" flowDimension="INTERMIDATE_CATCH" documentModel="GATEWAY" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/DECISION.svg</container-document>
+            <bounds>
+                <width value="42.0" min="35.0" max="180.0"/>
+                <height value="42.0" min="35.0" max="180.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="1.5"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(30,69,123)" width="3.9"/>
+                </inner-shape>
+            </shape-design>
+        </document>
+       
+         <document id="Split_Gateway" widget="org.netbeans.jbatch.modeler.core.widget.SplitGatewayWidget" specification="org.netbeans.jbatch.modeler.spec.Split" flowDimension="INTERMIDATE_CATCH" documentModel="GATEWAY" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/SPLIT.svg</container-document>
+            <bounds>
+                <width value="42.0" min="35.0" max="180.0"/>
+                <height value="42.0" min="35.0" max="180.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="1.5"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(30,69,123)" width="3.9"/>
+                </inner-shape>
+            </shape-design>
+        </document>
+       
+    </documents>
+</document-config>
