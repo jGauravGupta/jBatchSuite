@@ -82,7 +82,7 @@ public class GenerateCodeDialog extends GenericDialog
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         backupSourcesCheck.setSelected(true);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/jpa/modeler/generator/ui/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/jbatch/modeler/generator/ui/Bundle"); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(backupSourcesCheck, bundle.getString("GenerateCodeDialog.backupSourcesCheck.text")); // NOI18N
         backupSourcesCheck.setMargin(new java.awt.Insets(0, 0, 0, 0));
 

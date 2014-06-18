@@ -15,12 +15,21 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.api.annotations.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.17.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.progress</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.37</specification-version>
+                        <specification-version>1.32.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -28,7 +37,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.40.1</specification-version>
+                        <specification-version>2.36.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -37,7 +46,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.39.1</specification-version>
+                        <specification-version>1.32.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -94,7 +103,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>1.36</specification-version>
+                        <specification-version>1.34.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -103,7 +112,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>3</release-version>
-                        <specification-version>3.48</specification-version>
+                        <specification-version>3.46.1.22.43</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -112,7 +121,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.57</specification-version>
+                        <specification-version>1.54.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -121,7 +130,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.76</specification-version>
+                        <specification-version>1.72.1.8</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -130,7 +139,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.22.1</specification-version>
+                        <specification-version>1.20.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -138,7 +147,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.61.1</specification-version>
+                        <specification-version>7.59.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -146,7 +155,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.36.1</specification-version>
+                        <specification-version>7.32.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -154,7 +163,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.56.1</specification-version>
+                        <specification-version>6.53.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -162,7 +171,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.10.1</specification-version>
+                        <specification-version>8.8.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -178,7 +187,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.56.2</specification-version>
+                        <specification-version>7.51.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -186,7 +195,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.38.1</specification-version>
+                        <specification-version>7.36.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -194,7 +203,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.61.1</specification-version>
+                        <specification-version>6.58.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -202,7 +211,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.37.1</specification-version>
+                        <specification-version>8.33.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -210,7 +219,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.24.1</specification-version>
+                        <specification-version>8.22.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -218,7 +227,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.70.1</specification-version>
+                        <specification-version>6.65.1</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
