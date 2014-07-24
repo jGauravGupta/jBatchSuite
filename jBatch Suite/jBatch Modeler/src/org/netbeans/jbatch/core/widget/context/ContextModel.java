@@ -60,12 +60,12 @@ public class ContextModel {
         contextPaletteModel.getChildren().add(connectionModel);
 
 //        if (!(nodeWidget instanceof EndEventWidget) && !(nodeWidget instanceof ArtifactWidget)) {
-//            ContextPaletteButtonModel newWidgetModel = new DefaultPaletteButtonModel();
-//            contextPaletteModel.getChildren().add(newWidgetModel);
-//            newWidgetModel.setImage(Utilities.loadImage("org/netbeans/jbpmn/resource/context/ADD.png"));
-//            newWidgetModel.setTooltip("Add New");
-//            newWidgetModel.setPaletteModel(contextPaletteModel);
-//            newWidgetModel.setMouseListener(getAddWidgetAction(nodeWidget));
+            ContextPaletteButtonModel newWidgetModel = new DefaultPaletteButtonModel();
+            contextPaletteModel.getChildren().add(newWidgetModel);
+            newWidgetModel.setImage(Utilities.loadImage("org/netbeans/jbatch/modeler/resource/context/ADD.png"));
+            newWidgetModel.setTooltip("Add New");
+            newWidgetModel.setPaletteModel(contextPaletteModel);
+            newWidgetModel.setMouseListener(getAddWidgetAction(nodeWidget));
 //        }
 //
 //        if (!(nodeWidget instanceof EndEventWidget) && !(nodeWidget instanceof SubProcessWidget)
@@ -77,12 +77,12 @@ public class ContextModel {
 //            morphWidgetModel.setPaletteModel(contextPaletteModel);
 //            morphWidgetModel.setMouseListener(getTransformWidgetAction(nodeWidget));
 //        }
-//        ContextPaletteButtonModel deleteModel = new DefaultPaletteButtonModel();
-//        contextPaletteModel.getChildren().add(deleteModel);
-//        deleteModel.setImage(Utilities.loadImage("org/netbeans/jbpmn/resource/context/DELETE.png"));
-//        deleteModel.setTooltip("Delete");
-//        deleteModel.setPaletteModel(contextPaletteModel);
-//        deleteModel.setMouseListener(getRemoveWidgetAction(nodeWidget));
+        ContextPaletteButtonModel deleteModel = new DefaultPaletteButtonModel();
+        contextPaletteModel.getChildren().add(deleteModel);
+        deleteModel.setImage(Utilities.loadImage("org/netbeans/jbatch/modeler/resource/context/DELETE.png"));
+        deleteModel.setTooltip("Delete");
+        deleteModel.setPaletteModel(contextPaletteModel);
+        deleteModel.setMouseListener(getRemoveWidgetAction(nodeWidget));
         return contextPaletteModel;
     }
 
@@ -174,12 +174,12 @@ public class ContextModel {
         IPaletteConfig paletteConfig = widget.getModelerScene().getModelerFile().getVendorSpecification().getPaletteConfig();//PaletteConfigRepository.getDiagramModelPaletteConfig(BPMNProcessFileDataObject.class);
         for (CategoryNodeConfig categoryNodeConfig : paletteConfig.getCategoryNodeConfigs()) {
             String categoryName = categoryNodeConfig.getName();
-            if (categoryNodeConfig.getId().equals("CONTAINER")
-                    || categoryNodeConfig.getId().equals("ARTIFACT")
-                    || categoryNodeConfig.getId().equals("BOUNDARY_EVENT")
-                    || categoryNodeConfig.getId().equals("START_EVENT")) {
-                continue;
-            }
+//            if (categoryNodeConfig.getId().equals("CONTAINER")
+//                    || categoryNodeConfig.getId().equals("ARTIFACT")
+//                    || categoryNodeConfig.getId().equals("BOUNDARY_EVENT")
+//                    || categoryNodeConfig.getId().equals("START_EVENT")) {
+//                continue;
+//            }
             JMenu categoryMenuItem = null;
             Image img = categoryNodeConfig.getIcon(20, 20);//if icon not exist then dont create parent icon , subicon added to parent icon place
             if (img != null) {
@@ -192,7 +192,11 @@ public class ContextModel {
                 categoryMenuItem.setMargin(new java.awt.Insets(0, -3, 0, -3));
                 categoryMenuItem.setPreferredSize(new java.awt.Dimension(24, 23));
             }
-            for (final SubCategoryNodeConfig subCategoryNodeConfig : categoryNodeConfig.getSubCategoryNodeConfigs()) {
+            
+            if(categoryNodeConfig.getSubCategoryNodeConfigs().size() == 1) {
+                categoryMenuItem = null;
+            } 
+               for (final SubCategoryNodeConfig subCategoryNodeConfig : categoryNodeConfig.getSubCategoryNodeConfigs()) {
                 JMenuItem subCategoryMenuItem = new javax.swing.JMenuItem();
                 subCategoryMenuItem.setIcon(new ImageIcon(subCategoryNodeConfig.getPaletteDocument().getPaletteSmallIcon(22, 22)));
 //                subCategoryMenuItem.setText(subCategoryNodeConfig.getBPMNDocument().getName());
@@ -203,8 +207,30 @@ public class ContextModel {
                 subCategoryMenuItem.setMargin(new java.awt.Insets(-2, -3, 0, 0));
                 subCategoryMenuItem.setPreferredSize(new java.awt.Dimension(22, 25));
                 subCategoryMenuItem.setContentAreaFilled(false);
+                
+                setAddWidgetAction(widget,subCategoryMenuItem ,subCategoryNodeConfig);
+              
+                if (categoryMenuItem != null) {
+                    categoryMenuItem.add(subCategoryMenuItem);
+                } else {
+                    addWidgetPopupMenu.add(subCategoryMenuItem);
+                }
 
-                subCategoryMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            } 
+            
+            
+            
+            if (categoryMenuItem != null) {
+                addWidgetPopupMenu.add(categoryMenuItem);
+            }
+        }
+        return addWidgetPopupMenu;
+
+    }
+    
+    
+    private static void setAddWidgetAction(final INodeWidget widget,JMenuItem subCategoryMenuItem ,final SubCategoryNodeConfig subCategoryNodeConfig){
+          subCategoryMenuItem.addActionListener(new java.awt.event.ActionListener() {
                     @Override
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -235,19 +261,6 @@ public class ContextModel {
 
                     }
                 });
-                if (categoryMenuItem != null) {
-                    categoryMenuItem.add(subCategoryMenuItem);
-                } else {
-                    addWidgetPopupMenu.add(subCategoryMenuItem);
-                }
-
-            }
-            if (categoryMenuItem != null) {
-                addWidgetPopupMenu.add(categoryMenuItem);
-            }
-        }
-        return addWidgetPopupMenu;
-
     }
 
     public static MouseListener getAddWidgetAction(final INodeWidget widget) {

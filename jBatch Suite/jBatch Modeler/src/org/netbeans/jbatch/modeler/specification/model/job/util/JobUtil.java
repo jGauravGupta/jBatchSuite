@@ -18,9 +18,11 @@ package org.netbeans.jbatch.modeler.specification.model.job.util;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,9 +30,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
@@ -42,6 +53,7 @@ import org.netbeans.jbatch.modeler.core.widget.FlowNodeWidget;
 import org.netbeans.jbatch.modeler.core.widget.GatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.SequenceFlowWidget;
 import org.netbeans.jbatch.modeler.spec.Decision;
+import org.netbeans.jbatch.modeler.spec.Flow;
 import org.netbeans.jbatch.modeler.spec.Job;
 import org.netbeans.jbatch.modeler.spec.Listener;
 import org.netbeans.jbatch.modeler.spec.Listeners;
@@ -59,6 +71,7 @@ import org.netbeans.jbatch.modeler.spec.design.BatchPlane;
 import org.netbeans.jbatch.modeler.spec.design.BatchShape;
 import org.netbeans.jbatch.modeler.spec.design.Bounds;
 import org.netbeans.jbatch.modeler.spec.design.DiagramElement;
+import org.netbeans.jbatch.modeler.specification.model.job.JobDiagramModel;
 import org.netbeans.jbatch.modeler.specification.util.JavaBatchModelUtil;
 import org.netbeans.jbatch.modeler.widget.properties.user_interface.listener.ListenerPanel;
 import org.netbeans.jbatch.modeler.widget.properties.user_interface.property.PropertyPanel;
@@ -67,6 +80,7 @@ import org.netbeans.modeler.anchors.CustomRectangularAnchor;
 import org.netbeans.modeler.config.document.IModelerDocument;
 import org.netbeans.modeler.config.document.ModelerDocumentFactory;
 import org.netbeans.modeler.config.palette.SubCategoryNodeConfig;
+import org.netbeans.modeler.core.ModelerCore;
 import org.netbeans.modeler.core.ModelerFile;
 import org.netbeans.modeler.core.NBModelerUtil;
 import org.netbeans.modeler.core.exception.InvalidElmentException;
@@ -111,68 +125,112 @@ public class JobUtil extends JavaBatchModelUtil {
     private static Marshaller jobMarshaller;
     InputOutput io = IOProvider.getDefault().getIO("jBatch Console", false);
 
+//    public static Definitions findDefinition(ModelerFile file, String definitionId) {
+//        File savedFile = file.getFile();
+//        Definitions definition_Load = null;
+//        boolean definitionExist = false;
+//        XMLStreamReader xsr = null;
+//        try {
+//            if (savedFile.length() != 0) {
+//
+//                XMLInputFactory xif = XMLInputFactory.newFactory();
+//                StreamSource xml = new StreamSource(savedFile);
+//                xsr = xif.createXMLStreamReader(xml);
+//                xsr.nextTag();
+//                if (definitionId == null) {
+//                    while (xsr.hasNext() && !definitionExist) {
+//                        if (xsr.getEventType() == XMLStreamConstants.START_ELEMENT && xsr.getLocalName().equals("definitions") && xsr.getAttributeValue(null, "id") == null) {
+//                            definitionExist = true;
+//                        } else {
+//                            xsr.nextTag();
+//                        }
+//                    }
+//                } else {
+//                    while (xsr.hasNext() && !definitionExist) {
+//                        if (xsr.getEventType() == XMLStreamConstants.START_ELEMENT && xsr.getLocalName().equals("definitions") && definitionId.equals(xsr.getAttributeValue(null, "id"))) {
+//                            definitionExist = true;
+//                        } else {
+//                            xsr.next();
+//                        }
+//                    }
+//                }
+//
+//            }
+//            if (jobContext == null) {
+//                jobContext = JAXBContext.newInstance(new Class<?>[]{ShapeDesign.class, Definitions.class});
+//            }
+//            if (jobUnmarshaller == null) {
+//                jobUnmarshaller = jobContext.createUnmarshaller();
+//                jobUnmarshaller.setEventHandler(new ValidateJAXB());
+//            }
+//            if (definitionExist) {
+//                definition_Load = jobUnmarshaller.unmarshal(xsr, Definitions.class).getValue();//new StreamSource(savedFile)
+//            }
+//            if (xsr != null) {
+//                xsr.close();
+//            }
+//
+//        } catch (XMLStreamException ex) {
+//            Exceptions.printStackTrace(ex);
+//        } catch (JAXBException ex) {
+//            io.getOut().println("Exception: " + ex.toString());
+//            ex.printStackTrace();
+//            System.out.println("Document XML Not Exist");
+//        }
+//        return definition_Load;
+//    }
     @Override
     public void loadModelerFile(ModelerFile file) {
-        try {
-            IModelerScene scene = file.getModelerScene();
-            File savedFile = file.getFile();
-            if (jobContext == null) {
-                jobContext = JAXBContext.newInstance(new Class<?>[]{ShapeDesign.class, Definitions.class});
+
+        IModelerScene scene = file.getModelerScene();
+        Definitions definition_Load = Definitions.load(file, (String) file.getAttribute("definitionId"));
+        if (definition_Load == null) {
+            definition_Load = ((JobDiagramModel) file.getModelerDiagramModel()).getDefinitionsTemplate(file);
+            if (file.getAttribute("definitionId") != null) { //if flow then add defnition(flow) id
+                definition_Load.setId((String) file.getAttribute("definitionId"));
             }
-            if (jobUnmarshaller == null) {
-                jobUnmarshaller = jobContext.createUnmarshaller();
-                jobUnmarshaller.setEventHandler(new ValidateJAXB());
-            }
+        }
 
-            Definitions definition_Load = jobUnmarshaller.unmarshal(new StreamSource(savedFile), Definitions.class).getValue();
+        Job job = definition_Load.getJob();
+        scene.setRootElementSpec(job);
+        BatchDiagram diagram = new BatchDiagram();
+        diagram.setId(NBModelerUtil.getAutoGeneratedStringId());
+        BatchPlane plane = new BatchPlane();
+        plane.setId(NBModelerUtil.getAutoGeneratedStringId());
+        diagram.setBatchPlane(plane);
 
-            Job job = definition_Load.getJob();
-
-            scene.setRootElementSpec(job);
-
-            BatchDiagram diagram = new BatchDiagram();
-            diagram.setId(NBModelerUtil.getAutoGeneratedStringId());
-            BatchPlane plane = new BatchPlane();
-            plane.setId(NBModelerUtil.getAutoGeneratedStringId());
-            diagram.setBatchPlane(plane);
-
-            for (BatchDiagram diagram_Tmp : definition_Load.getBatchDiagram()) {
-                if (diagram_Tmp instanceof BatchDiagram) {
-                    BatchPlane tmpPlane = diagram_Tmp.getBatchPlane();
-                    for (DiagramElement element : tmpPlane.getDiagramElement()) {
-                        plane.getDiagramElement().add(element);
-                    }
+        for (BatchDiagram diagram_Tmp : definition_Load.getJobDiagram()) {
+            if (diagram_Tmp instanceof BatchDiagram) {
+                BatchPlane tmpPlane = diagram_Tmp.getBatchPlane();
+                for (DiagramElement element : tmpPlane.getDiagramElement()) {
+                    plane.getDiagramElement().add(element);
                 }
             }
-            definition_Load.getBatchDiagram().removeAll(definition_Load.getBatchDiagram());
-            definition_Load.getBatchDiagram().add(diagram);
+        }
+        definition_Load.getJobDiagram().removeAll(definition_Load.getJobDiagram());
+        definition_Load.getJobDiagram().add(diagram);
 
-            file.getModelerDiagramModel().setDefinitionElement(definition_Load);
-            file.getModelerDiagramModel().setRootElement(job);
-            file.getModelerDiagramModel().setDiagramElement(diagram);
+        file.getModelerDiagramModel().setDefinitionElement(definition_Load);
+        file.getModelerDiagramModel().setRootElement(job);
+        file.getModelerDiagramModel().setDiagramElement(diagram);
 
 //ELEMENT_UPGRADE
-            for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getDecisionOrFlowOrSplit())) {
-                loadFlowNode(scene, (Widget) scene, flowElement_Load);
-            }
+        for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getDecisionOrFlowOrSplit())) {
+            loadFlowNode(scene, (Widget) scene, flowElement_Load);
+        }
 
 //            for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getFlowElement())) {  //Boundary_Commneted
 //                loadBoundaryEvent(scene, flowElement_Load);
 //            }
-            for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getSequenceFlow())) {
-                loadEdge(scene, flowElement_Load);
-            }
+        for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getSequenceFlow())) {
+            loadEdge(scene, flowElement_Load);
+        }
 
 //            for (IArtifact artifact_Load : new CopyOnWriteArrayList<IArtifact>(job.getArtifact())) {  //Artifact_Commneted
 //                loadArtifact(scene, artifact_Load);
 //            }
-            for (DiagramElement diagramElement_Tmp : diagram.getBatchPlane().getDiagramElement()) {
-                loadDiagram(scene, diagram, diagramElement_Tmp);
-            }
-        } catch (JAXBException e) {
-            io.getOut().println("Exception: " + e.toString());
-            e.printStackTrace();
-            System.out.println("Document XML Not Exist");
+        for (DiagramElement diagramElement_Tmp : diagram.getBatchPlane().getDiagramElement()) {
+            loadDiagram(scene, diagram, diagramElement_Tmp);
         }
 
     }
@@ -204,7 +262,7 @@ public class JobUtil extends JavaBatchModelUtil {
                     } else {
                         throw new UnsupportedOperationException("Not supported yet.");
                     }
-                } else if (flowElement instanceof Decision) {
+                } else if (flowElement instanceof Decision || flowElement instanceof Flow) {
                     document = modelerDocumentFactory.getModelerDocument(flowElement);
                 } else {
                     throw new UnsupportedOperationException("Not supported yet.");
@@ -416,13 +474,224 @@ public class JobUtil extends JavaBatchModelUtil {
         }
     }
 
-    public void saveModelerFile(ModelerFile file) {
+    void transformXMLStream(XMLStreamReader xmlStreamReader, XMLStreamWriter xmlStreamWriter) {
         try {
-            updateBatchDiagram(file);
-            File savedFile = file.getFile();
+//            TransformerFactory tf = TransformerFactory.newInstance();
+//            Transformer t = tf.newTransformer();
+//            StAXSource source = new StAXSource(xmlStreamReader);
+//            StAXResult result = new StAXResult(xmlStreamWriter);
+//            t.transform(source, result);
 
+            boolean finish = false;
+            while (xmlStreamReader.hasNext() && !finish) {
+                switch (xmlStreamReader.getEventType()) {
+                    case XMLEvent.START_ELEMENT:
+                        String prefix = xmlStreamReader.getPrefix();
+                        String namespaceURI = xmlStreamReader.getNamespaceURI();
+                        if (namespaceURI != null) {
+                            if (prefix != null) {
+                                xmlStreamWriter.writeStartElement(xmlStreamReader.getPrefix(),
+                                        xmlStreamReader.getLocalName(),
+                                        xmlStreamReader.getNamespaceURI());
+                            } else {
+                                xmlStreamWriter.writeStartElement(xmlStreamReader.getNamespaceURI(),
+                                        xmlStreamReader.getLocalName());
+                            }
+                        } else {
+                            xmlStreamWriter.writeStartElement(xmlStreamReader.getLocalName());
+                        }
+
+                        for (int i = 0; i < xmlStreamReader.getNamespaceCount(); i++) {
+                            xmlStreamWriter.writeNamespace(xmlStreamReader.getNamespacePrefix(i),
+                                    xmlStreamReader.getNamespaceURI(i));
+                        }
+                        int count = xmlStreamReader.getAttributeCount();
+                        for (int i = 0; i < count; i++) {
+//                            xmlStreamWriter.writeAttribute(xmlStreamReader.getAttributePrefix(i),
+//                                    xmlStreamReader.getAttributeNamespace(i),
+//                                    xmlStreamReader.getAttributeLocalName(i),
+//                                    xmlStreamReader.getAttributeValue(i));
+
+                            String attrNamespaceURI = xmlStreamReader.getAttributeNamespace(i), attrPrefix = xmlStreamReader.getAttributePrefix(i);
+                            if (attrNamespaceURI != null) {
+                                if (attrPrefix != null) {
+                                    xmlStreamWriter.writeAttribute(attrPrefix, attrNamespaceURI,
+                                            xmlStreamReader.getAttributeLocalName(i),
+                                            xmlStreamReader.getAttributeValue(i));
+                                } else {
+                                    xmlStreamWriter.writeAttribute(attrNamespaceURI,
+                                            xmlStreamReader.getAttributeLocalName(i),
+                                            xmlStreamReader.getAttributeValue(i));
+                                }
+                            } else {
+                                xmlStreamWriter.writeAttribute(xmlStreamReader.getAttributeLocalName(i),
+                                        xmlStreamReader.getAttributeValue(i));
+                            }
+
+                        }
+                        break;
+                    case XMLEvent.END_ELEMENT:
+                        xmlStreamWriter.writeEndElement();
+                        if (xmlStreamReader.getLocalName().equals("definitions")) {
+                            finish = true;
+                        }
+                        break;
+                    case XMLEvent.SPACE:
+                    case XMLEvent.CHARACTERS:
+                        xmlStreamWriter.writeCharacters(xmlStreamReader.getTextCharacters(),
+                                xmlStreamReader.getTextStart(),
+                                xmlStreamReader.getTextLength());
+                        break;
+                    case XMLEvent.PROCESSING_INSTRUCTION:
+                        xmlStreamWriter.writeProcessingInstruction(xmlStreamReader.getPITarget(),
+                                xmlStreamReader.getPIData());
+                        break;
+                    case XMLEvent.CDATA:
+                        xmlStreamWriter.writeCData(xmlStreamReader.getText());
+                        break;
+
+                    case XMLEvent.COMMENT:
+                        xmlStreamWriter.writeComment(xmlStreamReader.getText());
+                        break;
+                    case XMLEvent.ENTITY_REFERENCE:
+                        xmlStreamWriter.writeEntityRef(xmlStreamReader.getLocalName());
+                        break;
+                    case XMLEvent.START_DOCUMENT:
+                        String encoding = xmlStreamReader.getCharacterEncodingScheme();
+                        String version = xmlStreamReader.getVersion();
+
+                        if (encoding != null && version != null) {
+                            xmlStreamWriter.writeStartDocument(encoding,
+                                    version);
+                        } else if (version != null) {
+                            xmlStreamWriter.writeStartDocument(xmlStreamReader.getVersion());
+                        }
+                        break;
+                    case XMLEvent.END_DOCUMENT:
+                        xmlStreamWriter.writeEndDocument();
+                        break;
+                    case XMLEvent.DTD:
+                        xmlStreamWriter.writeDTD(xmlStreamReader.getText());
+                        break;
+
+                }
+                if (!finish) {
+                    xmlStreamReader.next();
+                }
+            }
+        } catch (XMLStreamException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    public void saveModelerFile(ModelerFile modelerFile) {
+
+        Definitions definitions = (Definitions) modelerFile.getDefinitionElement();
+
+        try {
+            updateBatchDiagram(modelerFile);
+            List<String> closeDefinitionIdList = closeDiagram(modelerFile, definitions.getGarbageDefinitions());
+            List<String> definitionIdList = new ArrayList<String>(closeDefinitionIdList);
+//            definitionIdList.addAll(definitions.getGarbageDefinitions());
+            definitionIdList.add(definitions.getId());
+            File savedFile = modelerFile.getFile();
+
+            BufferedReader br = new BufferedReader(new FileReader(savedFile));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                System.out.println("savedFile : " + line);
+            }
+
+            File cloneSavedFile = File.createTempFile("TMP", "job");
+            FileUtils.copyFile(savedFile, cloneSavedFile);
+//            br = new BufferedReader(new FileReader(cloneSavedFile));
+//            line = null;
+//            while ((line = br.readLine()) != null) {
+//                System.out.println("line2 : " + line);
+//            }
+
+            XMLOutputFactory xof = XMLOutputFactory.newFactory();
+            XMLStreamWriter xsw = xof.createXMLStreamWriter(new FileWriter(savedFile));
+            xsw.setDefaultNamespace("http://jbatchsuite.java.net");
+
+            xsw.writeStartDocument();
+            xsw.writeStartElement("jbatchnb", "root", "http://jbatchsuite.java.net");
+            xsw.writeNamespace("jbatch", "http://xmlns.jcp.org/xml/ns/javaee");
+            xsw.writeNamespace("jbatchnb", "http://jbatchsuite.java.net");
+            xsw.writeNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            xsw.writeNamespace("java", "http://jcp.org/en/jsr/detail?id=270");
+            xsw.writeNamespace("nbm", "http://nbmodeler.java.net");
+
+//            br = new BufferedReader(new FileReader(savedFile));
+//            line = null;
+//            while ((line = br.readLine()) != null) {
+//                System.out.println("line3 : " + line);
+//            }
+            if (cloneSavedFile.length() != 0) {
+                try {
+                    XMLInputFactory xif = XMLInputFactory.newFactory();
+                    StreamSource xml = new StreamSource(cloneSavedFile);
+                    XMLStreamReader xsr = xif.createXMLStreamReader(xml);
+                    xsr.nextTag();
+                    while (xsr.getEventType() == XMLStreamConstants.START_ELEMENT) {
+//                        Def   Y    N
+//                        Tag   N(D) Y(D)
+//                        ________________
+//                              T    T
+//                        ----------------
+//
+//                        Def   Y    N
+//                        Tag   Y(S) N(S)
+//                        ________________
+//                              S    S
+//                        ----------------
+//
+//                        Def   Y    N
+//                        Tag   Y(D) N(S)
+//                        ________________
+//                              T    S
+//                        ----------------
+//
+//                       (D) => Different
+//                       (S) => Same
+//                        Y => Id Exist
+//                        N => Id is null
+//                        T => Transform
+//                        S => Skip
+
+                        if (xsr.getLocalName().equals("definitions")) {
+//                            if (definitions.getId() == null) {
+//                                if (xsr.getAttributeValue(null, "id") != null) {
+//                                    transformXMLStream(xsr, xsw);
+//                                } else {
+//                                    skipXMLStream(xsr);
+//                                }
+//                            } else {
+                            if (xsr.getAttributeValue(null, "id") == null) {
+                                if (definitions.getId() == null) {
+                                    skipXMLStream(xsr);
+                                } else {
+                                    transformXMLStream(xsr, xsw);
+                                }
+                            } else {
+                                if (!definitionIdList.contains(xsr.getAttributeValue(null, "id"))) {
+                                    transformXMLStream(xsr, xsw);
+                                } else {
+                                    skipXMLStream(xsr);
+                                }
+                            }
+//                            }
+                        }
+                        xsr.nextTag();
+                    }
+                } catch (XMLStreamException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+
+            JAXBElement<Definitions> je = new JAXBElement<Definitions>(new QName("http://jbatchsuite.java.net", "definitions", "jbatchnb"), Definitions.class, definitions);
             if (jobContext == null) {
-                jobContext = JAXBContext.newInstance(new Class<?>[]{ShapeDesign.class,Definitions.class});
+                jobContext = JAXBContext.newInstance(new Class<?>[]{ShapeDesign.class, Definitions.class});
             }
             if (jobMarshaller == null) {
                 jobMarshaller = jobContext.createMarshaller();
@@ -430,20 +699,51 @@ public class JobUtil extends JavaBatchModelUtil {
 
             // output pretty printed
             jobMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//            jobMarshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.omg.org/spec/Batch/20100524/MODEL http://www.omg.org/spec/Batch/2.0/20100501/Batch20.xsd");
+            jobMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+//          jobMarshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.omg.org/spec/Batch/20100524/MODEL http://www.omg.org/spec/Batch/2.0/20100501/Batch20.xsd");
             jobMarshaller.setEventHandler(new ValidateJAXB());
-            jobMarshaller.marshal(file.getDefinitionElement(), System.out);
-            StringWriter sw = new StringWriter();
-            jobMarshaller.marshal(file.getDefinitionElement(), sw);
+            jobMarshaller.marshal(je, System.out);
+            jobMarshaller.marshal(je, xsw);
 
-            FileUtils.writeStringToFile(savedFile, sw.toString().replaceFirst("xmlns:ns[A-Za-z\\d]{0,3}=\"http://www.omg.org/spec/Batch/20100524/MODEL\"",
-                    "xmlns=\"http://www.omg.org/spec/Batch/20100524/MODEL\""));
+//            xsw.writeEndElement();
+            xsw.writeEndDocument();
+            xsw.close();
+
+//            StringWriter sw = new StringWriter();
+//            jobMarshaller.marshal(file.getDefinitionElement(), sw);
+//            FileUtils.writeStringToFile(savedFile, sw.toString().replaceFirst("xmlns:ns[A-Za-z\\d]{0,3}=\"http://www.omg.org/spec/Batch/20100524/MODEL\"",
+//                    "xmlns=\"http://www.omg.org/spec/Batch/20100524/MODEL\""));
         } catch (JAXBException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
+        } catch (XMLStreamException ex) {
+            Exceptions.printStackTrace(ex);
         }
 
+    }
+
+    private List<String> closeDiagram(ModelerFile modelerFile, List<String> flowWidgetIdList) {
+        List<String> definitionIdList = new ArrayList<String>(flowWidgetIdList);
+        for (String flowWidgetId : flowWidgetIdList) {
+            String path = modelerFile.getPath().split("#")[0];
+            final ModelerFile targetModelerFile = ModelerCore.getModelerFile(path + "#" + flowWidgetId);
+            Definitions targetDefinitions;
+            if (targetModelerFile != null) {
+                targetModelerFile.getModelerPanelTopComponent().forceClose();
+                targetDefinitions = (Definitions) targetModelerFile.getDefinitionElement();
+            } else {
+                targetDefinitions = Definitions.load(modelerFile, flowWidgetId);
+            }
+            if (targetDefinitions != null) {
+                List<String> nextFlowWidgetIdList = new ArrayList<String>();
+                for (Flow flow : targetDefinitions.getJob().getFlow()) {
+                    nextFlowWidgetIdList.add(flow.getId());
+                }
+                definitionIdList.addAll(closeDiagram(modelerFile, nextFlowWidgetIdList));
+            }
+        }
+        return definitionIdList;
     }
 
     public static ShapeDesign getBatchShapeDesign(NodeWidget nodeWidget) {
@@ -817,6 +1117,26 @@ public class JobUtil extends JavaBatchModelUtil {
             }
         });
         return new NEntityPropertySupport(modelerFile, attributeEntity);
+    }
+
+    static void skipXMLStream(XMLStreamReader xmlStreamReader) {
+        try {
+            boolean finish = false;
+            while (xmlStreamReader.hasNext() && !finish) {
+                switch (xmlStreamReader.getEventType()) {
+                    case XMLEvent.END_ELEMENT:
+                        if (xmlStreamReader.getLocalName().equals("definitions")) {
+                            finish = true;
+                        }
+                        break;
+                }
+                if (!finish) {
+                    xmlStreamReader.next();
+                }
+            }
+        } catch (XMLStreamException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
 }

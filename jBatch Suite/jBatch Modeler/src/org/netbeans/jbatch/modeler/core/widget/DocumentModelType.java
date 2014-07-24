@@ -17,5 +17,5 @@ package org.netbeans.jbatch.modeler.core.widget;
 
 public enum DocumentModelType {
 
-    ACTIVITY, GATEWAY, SEQUENCEFLOW,  ARTIFACT;
+    STEP , CONTAINER ,  GATEWAY, SEQUENCEFLOW,  ARTIFACT;
 }

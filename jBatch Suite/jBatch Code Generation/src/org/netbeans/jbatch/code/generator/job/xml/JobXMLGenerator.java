@@ -29,12 +29,15 @@ import org.apache.commons.io.FileUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.jbatch.modeler.spec.Decision;
+import org.netbeans.jbatch.modeler.spec.Flow;
 import org.netbeans.jbatch.modeler.spec.Job;
 import org.netbeans.jbatch.modeler.spec.Next;
 import org.netbeans.jbatch.modeler.spec.Step;
+import org.netbeans.jbatch.modeler.spec.core.Definitions;
 import org.netbeans.jbatch.modeler.spec.core.FlowNode;
 import org.netbeans.jbatch.modeler.spec.core.KeyManager;
 import org.netbeans.jbatch.modeler.spec.core.SequenceFlow;
+import org.netbeans.modeler.core.ModelerFile;
 import org.netbeans.modeler.shape.ShapeDesign;
 import org.netbeans.modeler.task.ITaskSupervisor;
 import org.netbeans.modeler.validation.jaxb.ValidateJAXB;
@@ -46,7 +49,7 @@ public class JobXMLGenerator {
     private static Marshaller jobMarshaller;
     private static Unmarshaller jobUnmarshaller;
 
-    public void generateJobXML(ITaskSupervisor task, Project project, SourceGroup sourceGroup, String fileName, Job job) {
+    public void generateJobXML(ITaskSupervisor task, Project project, SourceGroup sourceGroup, ModelerFile modelerFile, String fileName, Job job) {
         try {
             if (jobContext == null) {
                 jobContext = JAXBContext.newInstance(new Class<?>[]{ShapeDesign.class, Job.class});
@@ -60,7 +63,7 @@ public class JobXMLGenerator {
                 jobUnmarshaller.setEventHandler(new ValidateJAXB());
             }
 
-            job = rectify(job);
+            job = rectify(modelerFile, job);
             File savedFile;
             if (project.getClass().getName().equals("org.netbeans.modules.maven.NbMavenProjectImpl")) {
                 savedFile = new File(project.getProjectDirectory().getPath() + "/src/main/resources/META-INF/batch-jobs/" + fileName + ".xml");// file.getFile();
@@ -71,11 +74,11 @@ public class JobXMLGenerator {
             if (savedFile.exists()) {
                 savedFile.createNewFile();
             }
-            System.out.println("savedFile : " + savedFile.getAbsolutePath());
+//            System.out.println("savedFile : " + savedFile.getAbsolutePath());
 
             // output pretty printed
             jobMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jobMarshaller.marshal(job, System.out);
+//            jobMarshaller.marshal(job, System.out);
             StringWriter sw = new StringWriter();
             jobMarshaller.marshal(job, sw);
             String jobText = sw.toString();
@@ -83,7 +86,7 @@ public class JobXMLGenerator {
             jobText = jobText.replaceFirst("xmlns:nbm=\"http://nbmodeler.java.net\"", "")
                     .replaceFirst("xmlns:jbatchnb=\"http://jbatchsuite.java.net\"", "")
                     .replaceFirst("xmlns:java=\"http://jcp.org/en/jsr/detail?id=270\"", "")
-                    .replaceFirst("xmlns:java=\"http://jcp.org/en/jsr/detail?id=270\"", "");
+                    .replaceFirst(":jbatch", "").replaceAll("jbatch:", "");
 
             FileUtils.writeStringToFile(savedFile, jobText);
 
@@ -95,7 +98,7 @@ public class JobXMLGenerator {
 
     }
 
-    private Job rectify(Job oldJob) {
+    private Job rectify(ModelerFile modelerFile, Job oldJob) {
         Job newJob = null;
         try {
             jobMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -134,6 +137,20 @@ public class JobXMLGenerator {
                             step.getChunk().getWriter().setProperties(null);
                         }
                     }
+                } else if (flowNode instanceof Flow) {
+                    Flow flow = (Flow) flowNode;
+                    Definitions definition = Definitions.load(modelerFile, flow.getId());
+                    if (definition != null) {
+                        Job job = rectify(modelerFile, definition.getJob());
+                        flow.setDecisionOrFlowOrSplit(job.getDecisionOrFlowOrSplit());
+                    }
+
+//                    if (flow.getProperties().getProperty().isEmpty()) {
+//                        flow.setProperties(null);
+//                    }
+//                    if (flow.getListeners().getListener().isEmpty()) {
+//                        flow.setListeners(null);
+//                    }
                 }
             }
 
@@ -146,6 +163,13 @@ public class JobXMLGenerator {
                         sourceStep.setNext(((KeyManager) targetFlowNode).getKey());
                     } else {
                         sourceStep.setNext(targetFlowNode.getId());
+                    }
+                } else if (sourceFlowNode instanceof Flow) {
+                    Flow sourceFlow = (Flow) sourceFlowNode;
+                    if (targetFlowNode instanceof KeyManager) {
+                        sourceFlow.setNext(((KeyManager) targetFlowNode).getKey());
+                    } else {
+                        sourceFlow.setNext(targetFlowNode.getId());
                     }
                 } else if (sourceFlowNode instanceof Decision) {
                     Decision sourceDecision = (Decision) sourceFlowNode;
@@ -164,10 +188,17 @@ public class JobXMLGenerator {
                 if (flowNode instanceof Step) {
                     Step step = (Step) flowNode;
                     step.setId(step.getKey());
+                    step.setName(null);
                     step.setKey(null);
+                } else if (flowNode instanceof Flow) {
+                    Flow flow = (Flow) flowNode;
+                    flow.setId(flow.getKey());
+                    flow.setName(null);
+                    flow.setKey(null);
                 } else if (flowNode instanceof Decision) {
                     Decision decision = (Decision) flowNode;
                     decision.setId(decision.getKey());
+                    decision.setName(null);
                     decision.setKey(null);
                 }
                 flowNode.setExtensionElements(null);

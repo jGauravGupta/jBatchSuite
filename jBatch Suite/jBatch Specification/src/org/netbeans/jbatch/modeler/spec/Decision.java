@@ -8,6 +8,7 @@ package org.netbeans.jbatch.modeler.spec;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -67,6 +68,12 @@ public class Decision extends Gateway implements KeyManager {
     @XmlAttribute(name = "key")
     private String key;//custom added
 
+    void beforeMarshal(Marshaller marshaller) {
+        if (getRef() == null || getRef().trim().isEmpty()) {
+            setRef("Batchlet" + getId());
+        }
+    }
+
     /**
      * Gets the value of the properties property.
      *
@@ -105,7 +112,7 @@ public class Decision extends Gateway implements KeyManager {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list null null null
-     * null null null     {@link End }
+     * null null null null     {@link End }
      * {@link Fail }
      * {@link Next }
      * {@link Stop }

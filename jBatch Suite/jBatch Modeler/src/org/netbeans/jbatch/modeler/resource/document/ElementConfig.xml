@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-
 <element-config>
     <groups>
         <group id="BASIC_PROP" name="Basic Properties"/>
@@ -69,6 +67,10 @@
                 <attribute id="key" groupId="BASIC_PROP" class="java.lang.String" name="key" read-only="false">
                     <display-name>Id</display-name>
                     <description></description>
+                </attribute>
+                <attribute id="name" groupId="BASIC_PROP" class="java.lang.String" name="name" read-only="false">
+                    <display-name>Name</display-name>
+                    <description></description>
                 </attribute>  
             </attributes>
         </element>
@@ -122,6 +124,18 @@
                     <display-name>Reference</display-name>
                     <description></description>
                 </attribute>
+            </attributes>
+        </element>
+        <element id="Flow" groupId="BASIC_PROP" class="org.netbeans.jbatch.modeler.spec.Flow">
+            <attributes>
+                <attribute id="key" groupId="BASIC_PROP" class="java.lang.String" name="key" read-only="false">
+                    <display-name>Id</display-name>
+                    <description></description>
+                </attribute>
+                <attribute id="name" groupId="BASIC_PROP" class="java.lang.String" name="name" read-only="false">
+                    <display-name>Name</display-name>
+                    <description></description>
+                </attribute>  
             </attributes>
         </element>
   <!--        <element id="TBaseElement" groupId="BASIC_PROP" class="org.netbeans.jbpmn.spec.TBaseElement">
@@ -521,7 +535,7 @@
             </attributes>
         </element>
 
--->
+        -->
 
 
 

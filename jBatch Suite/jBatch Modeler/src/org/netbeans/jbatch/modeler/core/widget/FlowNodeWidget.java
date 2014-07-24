@@ -18,9 +18,9 @@ package org.netbeans.jbatch.modeler.core.widget;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.visual.widget.Widget;
+import org.netbeans.jbatch.core.widget.context.ContextModel;
 import org.netbeans.jbatch.modeler.spec.core.FlowNode;
 import org.netbeans.jbatch.modeler.spec.core.SequenceFlow;
-import org.netbeans.jbatch.core.widget.context.ContextModel;
 import org.netbeans.modeler.config.element.ElementConfigFactory;
 import org.netbeans.modeler.core.exception.InvalidElmentException;
 import org.netbeans.modeler.specification.model.document.IModelerScene;
@@ -345,7 +345,9 @@ public class FlowNodeWidget extends NodeWidget implements FlowElementWidget, IFl
     public void unhoverWidget(int padding) {
         String model = this.getNodeWidgetInfo().getModelerDocument().getDocumentModel();
 //        FlowDimensionType flowDimension = this.getNodeWidgetInfo().getModelerDocument().getFlowDimension();
-        if (model.equals(DocumentModelType.ACTIVITY.name())) {
+        if (model.equals(DocumentModelType.STEP.name())) {
+            decreaseBorderWidth(TASK_HOVER_BORDER + padding);
+        } else if (model.equals(DocumentModelType.CONTAINER.name())) {
             decreaseBorderWidth(TASK_HOVER_BORDER + padding);
         } else if (model.equals(DocumentModelType.GATEWAY.name())) {
             decreaseBorderWidth(GATEWAY_HOVER_BORDER + padding);
@@ -356,11 +358,16 @@ public class FlowNodeWidget extends NodeWidget implements FlowElementWidget, IFl
         String model = this.getNodeWidgetInfo().getModelerDocument().getDocumentModel();
 //        FlowDimensionType flowDimension = this.getNodeWidgetInfo().getModelerDocument().getFlowDimension();
 
-        if (model.equals(DocumentModelType.ACTIVITY.name())) {
+        if (model.equals(DocumentModelType.STEP.name())) {
             increaseBorderWidth(TASK_HOVER_BORDER + padding);
-        } else if (model.equals(DocumentModelType.GATEWAY.name())) {
+        } else if (model.equals(DocumentModelType.CONTAINER.name())) {
+            increaseBorderWidth(TASK_HOVER_BORDER + padding);
+        }  else if (model.equals(DocumentModelType.GATEWAY.name())) {
             increaseBorderWidth(GATEWAY_HOVER_BORDER + padding);
         }
 
     }
+    
+
+    
 }

@@ -19,6 +19,7 @@ import java.awt.Point;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
+import org.netbeans.jbatch.modeler.core.widget.FlowWidget;
 import org.netbeans.modeler.core.engine.ModelerDiagramEngine;
 import static org.netbeans.modeler.core.engine.ModelerDiagramEngine.alignStrategyProvider;
 import org.netbeans.modeler.provider.NodeWidgetSelectProvider;
@@ -38,16 +39,28 @@ public class JobDiagramEngine extends ModelerDiagramEngine {
 
     @Override
     public void setNodeWidgetAction(final INodeWidget nodeWidget) {
-//            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditor());
-        WidgetAction doubleClickAction = new DoubleClickAction(new DoubleClickProvider() {
+        WidgetAction doubleClickAction = null;
+        
+        if(nodeWidget instanceof FlowWidget){
+            doubleClickAction = new DoubleClickAction(new DoubleClickProvider() {
+            @Override
+            public void onDoubleClick(Widget widget, Point point, boolean bln) {
+               ((FlowWidget)widget).openDiagram();
+            }
+        });
+        }else {
+            doubleClickAction = new DoubleClickAction(new DoubleClickProvider() {
             @Override
             public void onDoubleClick(Widget widget, Point point, boolean bln) {
                 nodeWidget.showProperties();
                 nodeWidget.getModelerScene().getModelerPanelTopComponent().changePersistenceState(false);
             }
-        });
-//            WidgetAction deleteAction = new KeyEventLoggerAction();
+        }); 
+        }
+        
         WidgetAction selectAction = ActionFactory.createSelectAction(new NodeWidgetSelectProvider(nodeWidget.getModelerScene()));
+        
+       
 //            WidgetAction alignWithMoveAction = ActionFactory.createAlignWithMoveAction(nodeWidget.getModelerScene().getMainLayer(), nodeWidget.getModelerScene().getInterractionLayer(), ActionFactory.createDefaultAlignWithMoveDecorator());
         WidgetAction moveAction = new MoveAction(nodeWidget,
                 null, new MultiMoveProvider(nodeWidget.getModelerScene()),

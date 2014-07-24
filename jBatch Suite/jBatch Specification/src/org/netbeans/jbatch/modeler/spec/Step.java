@@ -8,6 +8,7 @@ package org.netbeans.jbatch.modeler.spec;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -84,8 +85,25 @@ public class Step extends Activity implements KeyManager {
     protected String allowStartIfComplete;
     @XmlAttribute(name = "next")
     protected String next;
-    @XmlAttribute(name = "key")
-    private String key;//custom added
+    //custom added
+
+    void beforeMarshal(Marshaller marshaller) {
+        if (getBatchlet() != null) {
+            if (getBatchlet().getRef() == null || getBatchlet().getRef().trim().isEmpty()) {
+                getBatchlet().setRef("Batchlet" + getId());
+            }
+        } else {
+            if (getChunk().getReader().getRef() == null || getChunk().getReader().getRef().trim().isEmpty()) {
+                getChunk().getReader().setRef("Reader" + getId());
+            }
+            if (getChunk().getProcessor().getRef() == null || getChunk().getProcessor().getRef().trim().isEmpty()) {
+                getChunk().getProcessor().setRef("Processor" + getId());
+            }
+            if (getChunk().getWriter().getRef() == null || getChunk().getWriter().getRef().trim().isEmpty()) {
+                getChunk().getWriter().setRef("Writer" + getId());
+            }
+        }
+    }
 
     /**
      * Gets the value of the properties property.
@@ -205,7 +223,7 @@ public class Step extends Activity implements KeyManager {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list null null null
-     * null null     {@link End }
+     * null null null     {@link End }
      * {@link Fail }
      * {@link Next }
      * {@link Stop }
@@ -296,20 +314,6 @@ public class Step extends Activity implements KeyManager {
      */
     public void setNext(String value) {
         this.next = value;
-    }
-
-    /**
-     * @return the key
-     */
-    public String getKey() {
-        return key;
-    }
-
-    /**
-     * @param key the key to set
-     */
-    public void setKey(String key) {
-        this.key = key;
     }
 
 }

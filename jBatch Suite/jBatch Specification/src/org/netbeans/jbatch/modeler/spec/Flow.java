@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import org.netbeans.jbatch.modeler.spec.core.Activity;
+import org.netbeans.jbatch.modeler.spec.core.FlowNode;
 
 
 /**
@@ -54,7 +56,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "decisionOrFlowOrSplit",
     "transitionElements"
 })
-public class Flow {
+public class Flow  extends Activity{
 
     @XmlElements({
         @XmlElement(name = "decision", type = Decision.class),
@@ -62,7 +64,7 @@ public class Flow {
         @XmlElement(name = "split", type = Split.class),
         @XmlElement(name = "step", type = Step.class)
     })
-    protected List<Object> decisionOrFlowOrSplit;
+    private List<FlowNode> decisionOrFlowOrSplit;
     @XmlElements({
         @XmlElement(name = "end", type = End.class),
         @XmlElement(name = "fail", type = Fail.class),
@@ -70,11 +72,11 @@ public class Flow {
         @XmlElement(name = "stop", type = Stop.class)
     })
     protected List<Object> transitionElements;
-    @XmlAttribute(name = "id", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlID
-    @XmlSchemaType(name = "ID")
-    protected String id;
+//    @XmlAttribute(name = "id", required = true)
+//    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+//    @XmlID
+//    @XmlSchemaType(name = "ID")
+//    protected String id;
     @XmlAttribute(name = "next")
     protected String next;
 
@@ -103,9 +105,9 @@ public class Flow {
      * 
      * 
      */
-    public List<Object> getDecisionOrFlowOrSplit() {
+    public List<FlowNode> getDecisionOrFlowOrSplit() {
         if (decisionOrFlowOrSplit == null) {
-            decisionOrFlowOrSplit = new ArrayList<Object>();
+            setDecisionOrFlowOrSplit(new ArrayList<FlowNode>());
         }
         return this.decisionOrFlowOrSplit;
     }
@@ -142,29 +144,29 @@ public class Flow {
         return this.transitionElements;
     }
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
-    }
+//    /**
+//     * Gets the value of the id property.
+//     * 
+//     * @return
+//     *     possible object is
+//     *     {@link String }
+//     *     
+//     */
+//    public String getId() {
+//        return id;
+//    }
+//
+//    /**
+//     * Sets the value of the id property.
+//     * 
+//     * @param value
+//     *     allowed object is
+//     *     {@link String }
+//     *     
+//     */
+//    public void setId(String value) {
+//        this.id = value;
+//    }
 
     /**
      * Gets the value of the next property.
@@ -188,6 +190,13 @@ public class Flow {
      */
     public void setNext(String value) {
         this.next = value;
+    }
+
+    /**
+     * @param decisionOrFlowOrSplit the decisionOrFlowOrSplit to set
+     */
+    public void setDecisionOrFlowOrSplit(List<FlowNode> decisionOrFlowOrSplit) {
+        this.decisionOrFlowOrSplit = decisionOrFlowOrSplit;
     }
 
 }

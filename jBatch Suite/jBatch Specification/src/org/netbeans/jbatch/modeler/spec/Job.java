@@ -57,7 +57,7 @@ import org.netbeans.modeler.specification.model.document.core.IBaseElement;
  *
  *
  */
-@XmlRootElement(name = "job", namespace = "http://xmlns.jcp.org/xml/ns/javaee")
+@XmlRootElement(name = "job"/*, namespace = "http://xmlns.jcp.org/xml/ns/javaee"*/)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Job", propOrder = {
     "properties",
@@ -149,7 +149,8 @@ public class Job extends BaseElement implements IRootElement {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list null null null
-     * null null null null null null null null null null null null null null     {@link Decision }
+     * null null null null null null null null null null null null null null
+     * null null null null     {@link Decision }
      * {@link Flow }
      * {@link Split }
      * {@link Step }
@@ -161,6 +162,45 @@ public class Job extends BaseElement implements IRootElement {
             decisionOrFlowOrSplit = new ArrayList<FlowNode>();
         }
         return this.decisionOrFlowOrSplit;
+    }
+
+    public List<Flow> getFlow() {
+        List<Flow> flows = new ArrayList<Flow>();
+        if (decisionOrFlowOrSplit == null) {
+            decisionOrFlowOrSplit = new ArrayList<FlowNode>();
+        }
+        for (FlowNode flowNode : decisionOrFlowOrSplit) {
+            if (flowNode instanceof Flow) {
+                flows.add((Flow) flowNode);
+            }
+        }
+        return flows;
+    }
+
+    public List<Decision> getDecision() {
+        List<Decision> decisions = new ArrayList<Decision>();
+        if (decisionOrFlowOrSplit == null) {
+            decisionOrFlowOrSplit = new ArrayList<FlowNode>();
+        }
+        for (FlowNode flowNode : decisionOrFlowOrSplit) {
+            if (flowNode instanceof Split) {
+                decisions.add((Decision) flowNode);
+            }
+        }
+        return decisions;
+    }
+
+    public List<Split> getSplit() {
+        List<Split> splits = new ArrayList<Split>();
+        if (decisionOrFlowOrSplit == null) {
+            decisionOrFlowOrSplit = new ArrayList<FlowNode>();
+        }
+        for (FlowNode flowNode : decisionOrFlowOrSplit) {
+            if (flowNode instanceof Split) {
+                splits.add((Split) flowNode);
+            }
+        }
+        return splits;
     }
 
     /**

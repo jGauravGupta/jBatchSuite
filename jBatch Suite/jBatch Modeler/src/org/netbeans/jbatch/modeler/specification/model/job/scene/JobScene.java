@@ -27,13 +27,17 @@ import org.netbeans.jbatch.modeler.core.widget.ChunkWidget;
 import org.netbeans.jbatch.modeler.core.widget.DecisionGatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.FlowElementWidget;
 import org.netbeans.jbatch.modeler.core.widget.FlowNodeWidget;
+import org.netbeans.jbatch.modeler.core.widget.FlowWidget;
 import org.netbeans.jbatch.modeler.core.widget.GatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.SequenceFlowWidget;
 import org.netbeans.jbatch.modeler.core.widget.SplitGatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.StepWidget;
+import org.netbeans.jbatch.modeler.generator.ui.GenerateCodeDialog;
+import org.netbeans.jbatch.modeler.source.generator.task.SourceCodeGeneratorTask;
 import org.netbeans.jbatch.modeler.spec.Batchlet;
 import org.netbeans.jbatch.modeler.spec.Chunk;
 import org.netbeans.jbatch.modeler.spec.Decision;
+import org.netbeans.jbatch.modeler.spec.Flow;
 import org.netbeans.jbatch.modeler.spec.ItemProcessor;
 import org.netbeans.jbatch.modeler.spec.ItemReader;
 import org.netbeans.jbatch.modeler.spec.ItemWriter;
@@ -47,8 +51,6 @@ import org.netbeans.jbatch.modeler.spec.core.FlowNode;
 import org.netbeans.jbatch.modeler.spec.core.SequenceFlow;
 import org.netbeans.jbatch.modeler.spec.design.BatchDiagram;
 import org.netbeans.jbatch.modeler.specification.model.job.util.JobUtil;
-import org.netbeans.jbatch.modeler.generator.ui.GenerateCodeDialog;
-import org.netbeans.jbatch.modeler.source.generator.task.SourceCodeGeneratorTask;
 import org.netbeans.modeler.config.element.ElementConfigFactory;
 import org.netbeans.modeler.core.exception.InvalidElmentException;
 import org.netbeans.modeler.core.scene.ModelerScene;
@@ -404,10 +406,16 @@ public class JobScene extends ModelerScene {
                                 step.getChunk().getProcessor().setProperties(new Properties());
                                 step.getChunk().setWriter(new ItemWriter());
                                 step.getChunk().getWriter().setProperties(new Properties());
-                            } else {
-                                throw new InvalidElmentException("Invalid Batch Task Element : " + baseElement);
+                            }else {
+                                throw new InvalidElmentException("Invalid Batch Element : " + baseElement);
                             }
                             baseElement = step;
+                        }else if (baseElementWidget instanceof FlowWidget) {
+                                Flow flow = new Flow();
+                                flow.setKey(baseElementId);
+                                baseElement = flow;
+                        } else {
+                                throw new InvalidElmentException("Invalid Batch Element : " + baseElement);
                         }
 //                        else if (baseElementWidget instanceof SubProcessWidget) {//Sub_Commented
 //                            if (baseElementWidget instanceof DefaultSubProcessWidget) {

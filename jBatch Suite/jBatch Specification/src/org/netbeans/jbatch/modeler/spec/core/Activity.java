@@ -15,6 +15,23 @@
  */
 package org.netbeans.jbatch.modeler.spec.core;
 
-public class Activity extends FlowNode {
+import javax.xml.bind.annotation.XmlAttribute;
 
+public class Activity extends FlowNode {
+@XmlAttribute(name = "key")
+    private String key;
+
+ /**
+     * @return the key
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * @param key the key to set
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

@@ -15,26 +15,20 @@
  */
 package org.netbeans.jbatch.modeler.specification.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JComboBox;
-import javax.swing.JTextArea;
 import org.netbeans.jbatch.modeler.core.widget.BaseElementWidget;
 import org.netbeans.jbatch.modeler.core.widget.BatchletWidget;
 import org.netbeans.jbatch.modeler.core.widget.ChunkWidget;
 import org.netbeans.jbatch.modeler.core.widget.DecisionGatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.DocumentModelType;
 import org.netbeans.jbatch.modeler.core.widget.FlowNodeWidget;
+import org.netbeans.jbatch.modeler.core.widget.FlowWidget;
 import org.netbeans.jbatch.modeler.core.widget.SequenceFlowWidget;
 import org.netbeans.jbatch.modeler.core.widget.SplitGatewayWidget;
 import org.netbeans.modeler.border.ResizeBorder;
 import org.netbeans.modeler.config.document.IModelerDocument;
-import org.netbeans.modeler.core.ModelerFile;
 import org.netbeans.modeler.core.NBModelerUtil;
 import org.netbeans.modeler.core.exception.InvalidElmentException;
-import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.entity.ComboBoxValue;
 import org.netbeans.modeler.specification.model.document.IModelerScene;
-import org.netbeans.modeler.specification.model.document.widget.IBaseElementWidget;
 import org.netbeans.modeler.specification.model.util.NModelerUtil;
 import org.netbeans.modeler.widget.connection.relation.IRelationValidator;
 import org.netbeans.modeler.widget.edge.IEdgeWidget;
@@ -71,11 +65,17 @@ public abstract class JavaBatchModelUtil implements NModelerUtil {
         BaseElementWidget widget = null;
         IModelerDocument bpmnDocument = widgetInfo.getModelerDocument();
         //ELEMENT_UPGRADE
-        if (bpmnDocument.getDocumentModel().equals(DocumentModelType.ACTIVITY.name())) {
-            if (bpmnDocument.getId().equals("Batchlet_Activity")) {
+        if (bpmnDocument.getDocumentModel().equals(DocumentModelType.STEP.name())) {
+            if (bpmnDocument.getId().equals("Batchlet_Step")) {
                 widget = new BatchletWidget(scene, widgetInfo);
-            } else if (bpmnDocument.getId().equals("Chunk_Activity")) {
+            } else if (bpmnDocument.getId().equals("Chunk_Step")) {
                 widget = new ChunkWidget(scene, widgetInfo);
+            } else {
+                throw new InvalidElmentException("Invalid BPMN Element");
+            }
+        } else if (bpmnDocument.getDocumentModel().equals(DocumentModelType.CONTAINER.name())) {
+             if (bpmnDocument.getId().equals("Flow_Container")) {
+                widget = new FlowWidget(scene, widgetInfo);
             } else {
                 throw new InvalidElmentException("Invalid BPMN Element");
             }
@@ -87,7 +87,6 @@ public abstract class JavaBatchModelUtil implements NModelerUtil {
             } else {
                 throw new InvalidElmentException("Invalid BPMN Element");
             }
-
         } 
 //        else if (bpmnDocument.getDocumentModel().equals(DocumentModelType.ARTIFACT.name())) { //Artifact_Commneted
 //            if (bpmnDocument.getId().equals("TextAnnotation_Artifact")) {

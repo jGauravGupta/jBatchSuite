@@ -27,7 +27,7 @@ public class BatchSourceCodeGenerator implements JavaSourceCodeGenerator {
     @Override
     public void generate(ITaskSupervisor task, Project project, SourceGroup sourceGroup, InputDefinition inputDefinition) {
         Job2Java conv = new Job2Java();
-        conv.generateSource(task, project, sourceGroup, (Definitions) inputDefinition.getModelerFile().getDefinitionElement());
+        conv.generateSource(task, project, sourceGroup,  inputDefinition.getModelerFile());
 
     }
 

@@ -46,12 +46,19 @@ import org.openide.util.NbBundle.Messages;
 @DiagramModel(id = "Job", name = "Job")
 public class JobFileActionListener extends ModelerFileActionListener {
 
+    private String definitionId, definitionName, definitionTooltip;
+
     public JobFileActionListener(JobFileDataObject context) {
         super(context);
     }
 
     @Override
     public void initSpecification(ModelerFile modelerFile) {
+        modelerFile.addAttribute("definitionId", this.getDefinitionId());
+        if (this.getDefinitionName() != null) {
+            modelerFile.setName(this.getDefinitionName());
+            modelerFile.setTooltip(this.getDefinitionTooltip());
+        }
         modelerFile.setModelerVendorSpecification(new JavaBatchSpecification());
         ModelerSpecificationDiagramModel diagramModel = new JobDiagramModel();
         modelerFile.getVendorSpecification().setModelerSpecificationDiagramModel(diagramModel);
@@ -63,4 +70,47 @@ public class JobFileActionListener extends ModelerFileActionListener {
         diagramModel.setRelationValidator(new RelationValidator());
 
     }
+
+    /**
+     * @return the definitionId
+     */
+    public String getDefinitionId() {
+        return definitionId;
+    }
+
+    /**
+     * @param definitionId the definitionId to set
+     */
+    public void setDefinitionId(String definitionId) {
+        this.definitionId = definitionId;
+    }
+
+    /**
+     * @return the definitionName
+     */
+    public String getDefinitionName() {
+        return definitionName;
+    }
+
+    /**
+     * @param definitionName the definitionName to set
+     */
+    public void setDefinitionName(String definitionName) {
+        this.definitionName = definitionName;
+    }
+
+    /**
+     * @return the definitionTooltip
+     */
+    public String getDefinitionTooltip() {
+        return definitionTooltip;
+    }
+
+    /**
+     * @param definitionTooltip the definitionTooltip to set
+     */
+    public void setDefinitionTooltip(String definitionTooltip) {
+        this.definitionTooltip = definitionTooltip;
+    }
+
 }

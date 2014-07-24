@@ -23,9 +23,12 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.jbatch.code.generator.util.ConverterUtil;
 import org.netbeans.jbatch.code.templates.ClassPathLoader;
 import org.netbeans.jbatch.modeler.spec.Decision;
+import org.netbeans.jbatch.modeler.spec.Flow;
 import org.netbeans.jbatch.modeler.spec.Job;
 import org.netbeans.jbatch.modeler.spec.Step;
+import org.netbeans.jbatch.modeler.spec.core.Definitions;
 import org.netbeans.jbatch.modeler.spec.core.FlowNode;
+import org.netbeans.modeler.core.ModelerFile;
 import org.netbeans.modeler.task.ITaskSupervisor;
 import org.openide.filesystems.FileUtil;
 
@@ -36,7 +39,7 @@ public class JobSourceGenerator {
 //    private Project project;
 //    private SourceGroup sourceGroup;
 //    private String packageName = null;
-    public void generateSource(ITaskSupervisor task, Project project, SourceGroup sourceGroup, String _package, Job job) {
+    public void generateSource(ITaskSupervisor task, Project project, SourceGroup sourceGroup, ModelerFile modelerFile, String _package, Job job) {
 //        this.task = task;
 //        this.project = project;
 //        this.sourceGroup = sourceGroup;
@@ -83,6 +86,12 @@ public class JobSourceGenerator {
                 ConverterUtil.generateFile("decision/resources/Decision.java.template",
                         destDir.getAbsolutePath(), _package, decision.getRef(),
                         WordUtils.capitalizeFully(decision.getRef()));
+            } else if (flowNode instanceof Flow) {
+                Flow flow = (Flow) flowNode;
+                Definitions definition = Definitions.load(modelerFile, flow.getId());
+                if (definition != null) {
+                    generateSource(task, project, sourceGroup, modelerFile, _package, definition.getJob());
+                }
             }
         }
 
