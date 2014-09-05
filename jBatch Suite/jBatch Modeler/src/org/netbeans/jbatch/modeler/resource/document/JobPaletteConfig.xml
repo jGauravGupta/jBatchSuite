@@ -4,22 +4,38 @@
         <subcategory-node  id="Batchlet_Step" name="Batchlet" >
             <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/BATCHLET_ICON.svg" width="39" height="32"/>
         </subcategory-node>
-         <subcategory-node  id="Chunk_Step" name="Chunk" >
+        <subcategory-node  id="Chunk_Step" name="Chunk" >
             <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/CHUNK_ICON.svg" width="39" height="32"/>
         </subcategory-node>
     </category-node>
     <category-node id="CONTAINER" name="Container" icon="/org/netbeans/jbatch/modeler/resource/element/batch/ACTIVITY_ICON.svg">
-         <subcategory-node  id="Flow_Container" name="Flow" >
+        <subcategory-node  id="Flow_Container" name="Flow" >
             <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/FLOW_ICON.svg" width="39" height="32"/>
         </subcategory-node>
     </category-node>
-    
+    <category-node id="EVENT" name="Event" icon="/org/netbeans/jbatch/modeler/resource/element/batch/END.svg">
+        <subcategory-node  id="Start_Event" name="Start" >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/START.svg" width="32" height="32"/>
+        </subcategory-node>
+        <subcategory-node  id="Fail_Event" name="Fail" >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/FAIL.svg" width="32" height="32"/>
+        </subcategory-node>
+        <subcategory-node  id="Stop_Event" name="Stop" >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/STOP.svg" width="32" height="32"/>
+        </subcategory-node>
+        <subcategory-node  id="End_Event" name="End" >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/END.svg" width="32" height="32"/>
+        </subcategory-node>
+    </category-node>
     <category-node id="GATEWAY" name="Gateway" icon="/org/netbeans/jbatch/modeler/resource/element/batch/GATEWAY_ICON.svg">
         <subcategory-node  id="Decision_Gateway" name="Decision"  >
             <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/DECISION_ICON.svg" width="32" height="32"/>
         </subcategory-node>
-<!--        <subcategory-node  id="Split_Gateway" name="Split"  >
-            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/SPLIT.svg" width="32" height="32"/>
-        </subcategory-node>-->
+        <subcategory-node  id="Diverge_Split_Gateway" name="Split"  >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/SPLIT_ICON.svg" width="32" height="32"/>
+        </subcategory-node>
+        <subcategory-node  id="Converge_Split_Gateway" name="Converge" visible="false"  >
+            <palette-document icon="/org/netbeans/jbatch/modeler/resource/element/batch/CONVERGE.svg" width="32" height="32"/>
+        </subcategory-node>
     </category-node>
 </palette-config>

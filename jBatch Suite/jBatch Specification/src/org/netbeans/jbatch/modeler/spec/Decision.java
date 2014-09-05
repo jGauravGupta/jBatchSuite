@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 import org.netbeans.jbatch.modeler.spec.core.Gateway;
 import org.netbeans.jbatch.modeler.spec.core.KeyManager;
+import org.netbeans.jbatch.modeler.spec.core.TransitionManager;
 
 /**
  * <p>
@@ -48,7 +49,7 @@ import org.netbeans.jbatch.modeler.spec.core.KeyManager;
     "properties",
     "transitionElements"
 })
-public class Decision extends Gateway implements KeyManager {
+public class Decision extends Gateway implements KeyManager, TransitionManager {
 
     protected Properties properties;
     @XmlElements({
@@ -65,12 +66,10 @@ public class Decision extends Gateway implements KeyManager {
 //    protected String id;
     @XmlAttribute(name = "ref", required = true)
     protected String ref;
-    @XmlAttribute(name = "key")
-    private String key;//custom added
 
     void beforeMarshal(Marshaller marshaller) {
         if (getRef() == null || getRef().trim().isEmpty()) {
-            setRef("Batchlet" + getId());
+            setRef("Decision" + getId());
         }
     }
 
@@ -112,7 +111,7 @@ public class Decision extends Gateway implements KeyManager {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list null null null
-     * null null null null     {@link End }
+     * null null null null null null     {@link End }
      * {@link Fail }
      * {@link Next }
      * {@link Stop }
@@ -124,20 +123,6 @@ public class Decision extends Gateway implements KeyManager {
             transitionElements = new ArrayList<Object>();
         }
         return this.transitionElements;
-    }
-
-    public void addTransitionElement(Object transitionElement) {
-        if (transitionElements == null) {
-            transitionElements = new ArrayList<Object>();
-        }
-        this.transitionElements.add(transitionElement);
-    }
-
-    public void removeTransitionElement(Object transitionElement) {
-        if (transitionElements == null) {
-            transitionElements = new ArrayList<Object>();
-        }
-        this.transitionElements.remove(transitionElement);
     }
 
 //    /**
@@ -178,18 +163,24 @@ public class Decision extends Gateway implements KeyManager {
         this.ref = value;
     }
 
-    /**
-     * @return the key
-     */
-    public String getKey() {
-        return key;
+    public void addTransitionElement(Object transitionElement) {
+        if (transitionElements == null) {
+            this.transitionElements = new ArrayList<Object>();
+        }
+        transitionElements.add(transitionElement);
+    }
+
+    public void removeTransitionElement(Object transitionElement) {
+        if (transitionElements == null) {
+            this.transitionElements = new ArrayList<Object>();
+        }
+        transitionElements.remove(transitionElement);
     }
 
     /**
-     * @param key the key to set
+     * @param transitionElements the transitionElements to set
      */
-    public void setKey(String key) {
-        this.key = key;
+    public void setTransitionElements(List<Object> transitionElements) {
+        this.transitionElements = transitionElements;
     }
-
 }

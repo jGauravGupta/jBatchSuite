@@ -46,13 +46,19 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.netbeans.api.visual.anchor.Anchor;
+import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.jbatch.modeler.core.widget.ActivityWidget;
 import org.netbeans.jbatch.modeler.core.widget.BaseElementWidget;
+import org.netbeans.jbatch.modeler.core.widget.ConvergeSplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.DivergeSplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.EventWidget;
 import org.netbeans.jbatch.modeler.core.widget.FlowNodeWidget;
 import org.netbeans.jbatch.modeler.core.widget.GatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.SequenceFlowWidget;
-import org.netbeans.jbatch.modeler.spec.Decision;
+import org.netbeans.jbatch.modeler.core.widget.SplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.SplitterInputConnectionWidget;
+import org.netbeans.jbatch.modeler.core.widget.SplitterOutputConnectionWidget;
 import org.netbeans.jbatch.modeler.spec.Flow;
 import org.netbeans.jbatch.modeler.spec.Job;
 import org.netbeans.jbatch.modeler.spec.Listener;
@@ -60,10 +66,17 @@ import org.netbeans.jbatch.modeler.spec.Listeners;
 import org.netbeans.jbatch.modeler.spec.Properties;
 import org.netbeans.jbatch.modeler.spec.Property;
 import org.netbeans.jbatch.modeler.spec.Step;
+import org.netbeans.jbatch.modeler.spec.core.Converge;
 import org.netbeans.jbatch.modeler.spec.core.Definitions;
+import org.netbeans.jbatch.modeler.spec.core.Diverge;
+import org.netbeans.jbatch.modeler.spec.core.Event;
 import org.netbeans.jbatch.modeler.spec.core.ExtensionElements;
 import org.netbeans.jbatch.modeler.spec.core.FlowNode;
+import org.netbeans.jbatch.modeler.spec.core.Gateway;
 import org.netbeans.jbatch.modeler.spec.core.SequenceFlow;
+import org.netbeans.jbatch.modeler.spec.core.SplitterConnection;
+import org.netbeans.jbatch.modeler.spec.core.SplitterInputConnection;
+import org.netbeans.jbatch.modeler.spec.core.SplitterOutputConnection;
 import org.netbeans.jbatch.modeler.spec.design.BatchDiagram;
 import org.netbeans.jbatch.modeler.spec.design.BatchEdge;
 import org.netbeans.jbatch.modeler.spec.design.BatchLabel;
@@ -75,6 +88,7 @@ import org.netbeans.jbatch.modeler.specification.model.job.JobDiagramModel;
 import org.netbeans.jbatch.modeler.specification.util.JavaBatchModelUtil;
 import org.netbeans.jbatch.modeler.widget.properties.user_interface.listener.ListenerPanel;
 import org.netbeans.jbatch.modeler.widget.properties.user_interface.property.PropertyPanel;
+import org.netbeans.modeler.anchors.CustomCircularAnchor;
 import org.netbeans.modeler.anchors.CustomPathAnchor;
 import org.netbeans.modeler.anchors.CustomRectangularAnchor;
 import org.netbeans.modeler.config.document.IModelerDocument;
@@ -215,7 +229,7 @@ public class JobUtil extends JavaBatchModelUtil {
         file.getModelerDiagramModel().setDiagramElement(diagram);
 
 //ELEMENT_UPGRADE
-        for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getDecisionOrFlowOrSplit())) {
+        for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getFlowNode())) {
             loadFlowNode(scene, (Widget) scene, flowElement_Load);
         }
 
@@ -231,6 +245,38 @@ public class JobUtil extends JavaBatchModelUtil {
 //            }
         for (DiagramElement diagramElement_Tmp : diagram.getBatchPlane().getDiagramElement()) {
             loadDiagram(scene, diagram, diagramElement_Tmp);
+        }
+
+        for (IFlowElement flowElement_Load : new CopyOnWriteArrayList<IFlowElement>(job.getFlowNode())) {
+            if (flowElement_Load instanceof Gateway) {
+                if (flowElement_Load instanceof Diverge) {
+                    Diverge divergeSpec = (Diverge) flowElement_Load;
+                    DivergeSplitGatewayWidget divergeWidget = (DivergeSplitGatewayWidget) scene.findBaseElement(divergeSpec.getId());
+                    ConvergeSplitGatewayWidget convergeWidget = (ConvergeSplitGatewayWidget) scene.findBaseElement(divergeSpec.getConvergeRef());
+                    divergeWidget.setConvergeSplitGatewayWidget(convergeWidget);
+                    convergeWidget.setDivergeSplitGatewayWidget(divergeWidget);
+                } else if (flowElement_Load instanceof Converge) {
+                    Converge convergeSpec = (Converge) flowElement_Load;
+                    DivergeSplitGatewayWidget divergeWidget = (DivergeSplitGatewayWidget) scene.findBaseElement(convergeSpec.getDivergeRef());
+                    ConvergeSplitGatewayWidget convergeWidget = (ConvergeSplitGatewayWidget) scene.findBaseElement(convergeSpec.getId());
+                    divergeWidget.setConvergeSplitGatewayWidget(convergeWidget);
+                    convergeWidget.setDivergeSplitGatewayWidget(divergeWidget);
+                }
+            } else if (flowElement_Load instanceof SplitterConnection) {
+                if (flowElement_Load instanceof SplitterInputConnection) {
+                    SplitterInputConnection inputConnectionSpec = (SplitterInputConnection) flowElement_Load;
+                    SplitterInputConnectionWidget inputConnectionWidget = (SplitterInputConnectionWidget) scene.findBaseElement(inputConnectionSpec.getId());
+                    SplitterOutputConnectionWidget outputConnectionWidget = (SplitterOutputConnectionWidget) scene.findBaseElement(inputConnectionSpec.getOutputConnectionRef());
+                    inputConnectionWidget.setOutputConnectionWidget(outputConnectionWidget);
+                    outputConnectionWidget.setInputConnectionWidget(inputConnectionWidget);
+                } else if (flowElement_Load instanceof SplitterOutputConnection) {
+                    SplitterOutputConnection outputConnectionSpec = (SplitterOutputConnection) flowElement_Load;
+                    SplitterOutputConnectionWidget outputConnectionWidget = (SplitterOutputConnectionWidget) scene.findBaseElement(outputConnectionSpec.getId());
+                    SplitterInputConnectionWidget inputConnectionWidget = (SplitterInputConnectionWidget) scene.findBaseElement(outputConnectionSpec.getInputConnectionRef());
+                    outputConnectionWidget.setInputConnectionWidget(inputConnectionWidget);
+                    inputConnectionWidget.setOutputConnectionWidget(outputConnectionWidget);
+                }
+            }
         }
 
     }
@@ -262,7 +308,7 @@ public class JobUtil extends JavaBatchModelUtil {
                     } else {
                         throw new UnsupportedOperationException("Not supported yet.");
                     }
-                } else if (flowElement instanceof Decision || flowElement instanceof Flow) {
+                } else if (flowElement instanceof Gateway || flowElement instanceof Flow || flowElement instanceof Event) {
                     document = modelerDocumentFactory.getModelerDocument(flowElement);
                 } else {
                     throw new UnsupportedOperationException("Not supported yet.");
@@ -323,14 +369,21 @@ public class JobUtil extends JavaBatchModelUtil {
         if (baseElement instanceof SequenceFlow) {
             SequenceFlow sequenceFlow = (SequenceFlow) baseElement;
             edgeWidgetInfo.setName(((SequenceFlow) baseElement).getName());
-            edgeWidgetInfo.setType("SEQUENCEFLOW");
 
+            if (baseElement instanceof SplitterConnection) {
+                if (baseElement instanceof SplitterInputConnection) {
+                    edgeWidgetInfo.setType("SPLITTER_INPUT_CONNECTION");
+                } else if (baseElement instanceof SplitterOutputConnection) {
+                    edgeWidgetInfo.setType("SPLITTER_OUTPUT_CONNECTION");
+                }
+            } else {
+                edgeWidgetInfo.setType("SEQUENCEFLOW");
+            }
             NodeWidget sourceNodeWidget = (NodeWidget) scene.findBaseElement(sequenceFlow.getSourceRef());//REMOVE_PRE  must be getFlowElement
             NodeWidget targetNodeWidget = (NodeWidget) scene.findBaseElement(sequenceFlow.getTargetRef());//REMOVE_PRE  must be getFlowElement
             edgeWidgetInfo.setSource(sourceNodeWidget.getNodeWidgetInfo().getId());
             edgeWidgetInfo.setTarget(targetNodeWidget.getNodeWidgetInfo().getId());
 
-            // edge.setName("C" + ((BatchScene)scene).getEdgeCounter());
             IEdgeWidget edgeWidget = scene.createEdgeWidget(edgeWidgetInfo);
             if (((SequenceFlow) baseElement).getName() != null) {
                 edgeWidget.setLabel(((SequenceFlow) baseElement).getName());
@@ -382,18 +435,13 @@ public class JobUtil extends JavaBatchModelUtil {
 //            loadEdge(scene, artifact);
 //        }
 //    }
-    private void loadDiagram(IModelerScene scene, BatchDiagram diagram, DiagramElement diagramElement) {
-//       BatchProcessUtil util = new BatchProcessUtil();
-        if (diagramElement instanceof BatchShape) {
-            BatchShape shape = (BatchShape) diagramElement;
-            Bounds bounds = shape.getBounds();
-            Widget widget = (Widget) scene.findBaseElement(shape.getBatchElement());
-            if (widget != null) {
-                if (widget instanceof NodeWidget) { //reverse ref
-                    NodeWidget nodeWidget = (NodeWidget) widget;
-                    NodeImageWidget imageWidget = nodeWidget.getNodeImageWidget();
-                    imageWidget.updateWidget((int) bounds.getWidth(), (int) bounds.getHeight(), (int) bounds.getWidth(), (int) bounds.getHeight());
-                    imageWidget.setPreferredSize(new Dimension((int) bounds.getWidth(), (int) bounds.getHeight()));
+    public void loadNodeWidgetDiagram(IBaseElementWidget widget, BatchShape shape) {
+        Bounds bounds = shape.getBounds();
+        if (widget instanceof NodeWidget) { //reverse ref
+            NodeWidget nodeWidget = (NodeWidget) widget;
+            NodeImageWidget imageWidget = nodeWidget.getNodeImageWidget();
+            imageWidget.updateWidget((int) bounds.getWidth(), (int) bounds.getHeight(), (int) bounds.getWidth(), (int) bounds.getHeight());
+            imageWidget.setPreferredSize(new Dimension((int) bounds.getWidth(), (int) bounds.getHeight()));
 
 //                    if (nodeWidget instanceof IFlowNodeWidget && ((IFlowNodeWidget) nodeWidget).getFlowElementsContainer() instanceof SubProcessWidget) {//Sub_Commented
 //                        SubProcessWidget parentWidget = (SubProcessWidget) ((IFlowNodeWidget) nodeWidget).getFlowElementsContainer();
@@ -402,53 +450,62 @@ public class JobUtil extends JavaBatchModelUtil {
 //                        Point location = new Point((int) (bounds.getX() - parentbounds.getX()), (int) (bounds.getY() - parentbounds.getY()));
 //                        nodeWidget.setPreferredLocation(nodeWidget.convertSceneToLocal(location));
 //                    } else {
-                    Point location = new Point((int) bounds.getX(), (int) bounds.getY());
-                    nodeWidget.setPreferredLocation(location);
+            Point location = new Point((int) bounds.getX(), (int) bounds.getY());
+            nodeWidget.setPreferredLocation(location);
 //                    }
 
-                    if (shape.getBatchLabel() != null) {
-                        Bounds bound = shape.getBatchLabel().getBounds();
-                        nodeWidget.getLabelManager().getLabelWidget().getParentWidget().setPreferredBounds(
-                                nodeWidget.getLabelManager().getLabelWidget().getParentWidget().convertSceneToLocal(bound.toRectangle()));
-                    } else {
-                        if (nodeWidget.getLabelManager() != null) {
-                            nodeWidget.getScene().validate();
-                            nodeWidget.getLabelManager().setDefaultPosition(); //if location not found in di then set default position to nodewidget
-                        }
-                    }
+            if (shape.getBatchLabel() != null) {
+                Bounds bound = shape.getBatchLabel().getBounds();
+                nodeWidget.getLabelManager().getLabelWidget().getParentWidget().setPreferredBounds(
+                        nodeWidget.getLabelManager().getLabelWidget().getParentWidget().convertSceneToLocal(bound.toRectangle()));
+            } else {
+                if (nodeWidget.getLabelManager() != null) {
+                    nodeWidget.getScene().validate();
+                    nodeWidget.getLabelManager().setDefaultPosition(); //if location not found in di then set default position to nodewidget
+                }
+            }
 
-                    nodeWidget.setActiveStatus(false);//Active Status is used to prevent reloading SVGDocument until complete document is loaded
+            nodeWidget.setActiveStatus(false);//Active Status is used to prevent reloading SVGDocument until complete document is loaded
 
-                    ShapeDesign shapeDesign = null; //// BatchShapeDesign XML Location Change Here
-                    if (nodeWidget instanceof FlowNodeWidget) {
-                        FlowNode flowNode = (FlowNode) ((FlowNodeWidget) nodeWidget).getBaseElementSpec();
-                        ExtensionElements extensionElements = flowNode.getExtensionElements();
-                        if (extensionElements != null) {
-                            for (Object obj : extensionElements.getAny()) {
-                                if (obj instanceof Element) { //if ShapeDesign is not in JAXB Context
-                                    Element element = (Element) obj;
-                                    if ("ShapeDesign".equals(element.getNodeName())) {
-                                        try {
-                                            shapeDesign = jobUnmarshaller.unmarshal((Element) extensionElements.getAny().get(0), ShapeDesign.class).getValue();
-                                            shapeDesign.afterUnmarshal();
-                                        } catch (JAXBException ex) {
-                                            Exceptions.printStackTrace(ex);
-                                        }
-                                    }
-                                } else if (obj instanceof ShapeDesign) {
-                                    shapeDesign = (ShapeDesign) obj;
+            ShapeDesign shapeDesign = null; //// BatchShapeDesign XML Location Change Here
+            if (nodeWidget instanceof FlowNodeWidget) {
+                FlowNode flowNode = (FlowNode) ((FlowNodeWidget) nodeWidget).getBaseElementSpec();
+                ExtensionElements extensionElements = flowNode.getExtensionElements();
+                if (extensionElements != null) {
+                    for (Object obj : extensionElements.getAny()) {
+                        if (obj instanceof Element) { //if ShapeDesign is not in JAXB Context
+                            Element element = (Element) obj;
+                            if ("ShapeDesign".equals(element.getNodeName())) {
+                                try {
+                                    shapeDesign = jobUnmarshaller.unmarshal((Element) extensionElements.getAny().get(0), ShapeDesign.class).getValue();
+                                    shapeDesign.afterUnmarshal();
+                                } catch (JAXBException ex) {
+                                    Exceptions.printStackTrace(ex);
                                 }
                             }
+                        } else if (obj instanceof ShapeDesign) {
+                            shapeDesign = (ShapeDesign) obj;
                         }
                     }
-                    if (shapeDesign != null) {
-                        nodeWidget = (NodeWidget) updateNodeWidgetDesign(shapeDesign, nodeWidget);
-                    }
-                    nodeWidget.setActiveStatus(true);
-                    nodeWidget.reloadSVGDocument();
-                } else {
-                    throw new InvalidElmentException("Invalid Batch Element : " + widget);
                 }
+            }
+            if (shapeDesign != null) {
+                nodeWidget = (NodeWidget) updateNodeWidgetDesign(shapeDesign, nodeWidget);
+            }
+            nodeWidget.setActiveStatus(true);
+            nodeWidget.reloadSVGDocument();
+        } else {
+            throw new InvalidElmentException("Invalid Batch Element : " + widget);
+        }
+    }
+
+    private void loadDiagram(IModelerScene scene, BatchDiagram diagram, DiagramElement diagramElement) {
+//       BatchProcessUtil util = new BatchProcessUtil();
+        if (diagramElement instanceof BatchShape) {
+            BatchShape shape = (BatchShape) diagramElement;
+            IBaseElementWidget widget = scene.findBaseElement(shape.getBatchElement());
+            if (widget != null) {
+                loadNodeWidgetDiagram(widget, shape);
             }
         } else if (diagramElement instanceof BatchEdge) {
             BatchEdge edge = (BatchEdge) diagramElement;
@@ -903,7 +960,9 @@ public class JobUtil extends JavaBatchModelUtil {
             if (nodeWidget instanceof ActivityWidget) {
                 sourceAnchor = new CustomRectangularAnchor(nodeWidget, 0, true);
             } else if (nodeWidget instanceof GatewayWidget) {
-                sourceAnchor = new CustomPathAnchor(nodeWidget, true);
+                    sourceAnchor = new CustomPathAnchor(nodeWidget, true);
+            } else if (nodeWidget instanceof EventWidget) {
+                sourceAnchor = new CustomCircularAnchor(nodeWidget);
             } else {
                 throw new InvalidElmentException("Invalid Batch Process Element : " + nodeWidget);
             }
@@ -1058,8 +1117,12 @@ public class JobUtil extends JavaBatchModelUtil {
         return new NEntityPropertySupport(modelerFile, attributeEntity);
     }
 
-    public static PropertySupport addProperty(final ModelerFile modelerFile, final Properties properties) {
-        final NAttributeEntity attributeEntity = new NAttributeEntity("Properties", "Properties", "");
+    public static NAttributeEntity addProperty(final Properties properties){
+        return addProperty( properties,"Properties", "Properties", "");
+    }
+ public static NAttributeEntity addProperty(final Properties properties,String name, String displayName, String shortDescription) {
+     
+        final NAttributeEntity attributeEntity = new NAttributeEntity(name, displayName, shortDescription);
         attributeEntity.setCountDisplay(new String[]{"No Properties set", "One Property set", "Properties set"});
 
         List<Column> columns = new ArrayList<Column>();
@@ -1067,7 +1130,7 @@ public class JobUtil extends JavaBatchModelUtil {
         columns.add(new Column("Name", false, String.class));
         columns.add(new Column("Value", false, String.class));
         attributeEntity.setColumns(columns);
-        attributeEntity.setCustomDialog(new PropertyPanel(modelerFile));
+        attributeEntity.setCustomDialog(new PropertyPanel());
         attributeEntity.setTableDataListener(new NEntityDataListener() {
 
             List<Object[]> data;
@@ -1113,11 +1176,13 @@ public class JobUtil extends JavaBatchModelUtil {
                     propretyList.add(property);
                 }
                 properties.setProperty(propretyList);
-                this.data = data;
+                initData();
             }
         });
-        return new NEntityPropertySupport(modelerFile, attributeEntity);
+        return attributeEntity;
+//        return new NEntityPropertySupport(modelerFile, attributeEntity);
     }
+    
 
     static void skipXMLStream(XMLStreamReader xmlStreamReader) {
         try {

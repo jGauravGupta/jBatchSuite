@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 import org.netbeans.jbatch.modeler.spec.core.Activity;
 import org.netbeans.jbatch.modeler.spec.core.KeyManager;
+import org.netbeans.jbatch.modeler.spec.core.TransitionManager;
 
 /**
  * <p>
@@ -57,15 +58,17 @@ import org.netbeans.jbatch.modeler.spec.core.KeyManager;
     "listeners",
     "batchlet",
     "chunk",
+    "partitionAllowed",
     "partition",
     "transitionElements"
 })
-public class Step extends Activity implements KeyManager {
+public class Step extends Activity implements KeyManager, TransitionManager {
 
     protected Properties properties;
     protected Listeners listeners;
     protected Batchlet batchlet;
     protected Chunk chunk;
+    private Boolean partitionAllowed = false;
     protected Partition partition;
     @XmlElements({
         @XmlElement(name = "end", type = End.class),
@@ -73,7 +76,7 @@ public class Step extends Activity implements KeyManager {
         @XmlElement(name = "next", type = Next.class),
         @XmlElement(name = "stop", type = Stop.class)
     })
-    protected List<Object> transitionElements;
+    private List<Object> transitionElements;
 //    @XmlAttribute(name = "id", required = true)
 //    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
 //    @XmlID
@@ -82,7 +85,7 @@ public class Step extends Activity implements KeyManager {
     @XmlAttribute(name = "start-limit")
     protected String startLimit;
     @XmlAttribute(name = "allow-start-if-complete")
-    protected String allowStartIfComplete;
+    protected Boolean allowStartIfComplete =false;//String
     @XmlAttribute(name = "next")
     protected String next;
     //custom added
@@ -223,18 +226,40 @@ public class Step extends Activity implements KeyManager {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list null null null
-     * null null null     {@link End }
+     * null null null null     {@link End }
      * {@link Fail }
      * {@link Next }
      * {@link Stop }
      *
      *
+     * @return
      */
     public List<Object> getTransitionElements() {
         if (transitionElements == null) {
-            transitionElements = new ArrayList<Object>();
+            this.transitionElements = new ArrayList<Object>();
         }
         return this.transitionElements;
+    }
+
+    public void addTransitionElement(Object transitionElement) {
+        if (transitionElements == null) {
+            this.transitionElements = new ArrayList<Object>();
+        }
+        transitionElements.add(transitionElement);
+    }
+
+    public void removeTransitionElement(Object transitionElement) {
+        if (transitionElements == null) {
+            this.transitionElements = new ArrayList<Object>();
+        }
+        transitionElements.remove(transitionElement);
+    }
+
+    /**
+     * @param transitionElements the transitionElements to set
+     */
+    public void setTransitionElements(List<Object> transitionElements) {
+        this.transitionElements = transitionElements;
     }
 
 //    /**
@@ -282,7 +307,7 @@ public class Step extends Activity implements KeyManager {
      * @return possible object is {@link String }
      *
      */
-    public String getAllowStartIfComplete() {
+    public Boolean getAllowStartIfComplete() {
         return allowStartIfComplete;
     }
 
@@ -292,7 +317,7 @@ public class Step extends Activity implements KeyManager {
      * @param value allowed object is {@link String }
      *
      */
-    public void setAllowStartIfComplete(String value) {
+    public void setAllowStartIfComplete(Boolean value) {
         this.allowStartIfComplete = value;
     }
 
@@ -314,6 +339,20 @@ public class Step extends Activity implements KeyManager {
      */
     public void setNext(String value) {
         this.next = value;
+    }
+
+    /**
+     * @return the partitionAllowed
+     */
+    public Boolean getPartitionAllowed() {
+        return partitionAllowed;
+    }
+
+    /**
+     * @param partitionAllowed the partitionAllowed to set
+     */
+    public void setPartitionAllowed(Boolean partitionAllowed) {
+        this.partitionAllowed = partitionAllowed;
     }
 
 }

@@ -24,19 +24,29 @@ import org.netbeans.jbatch.modeler.core.widget.ActivityWidget;
 import org.netbeans.jbatch.modeler.core.widget.BaseElementWidget;
 import org.netbeans.jbatch.modeler.core.widget.BatchletWidget;
 import org.netbeans.jbatch.modeler.core.widget.ChunkWidget;
+import org.netbeans.jbatch.modeler.core.widget.ConvergeSplitGatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.DecisionGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.DivergeSplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.EndEventWidget;
+import org.netbeans.jbatch.modeler.core.widget.EventWidget;
+import org.netbeans.jbatch.modeler.core.widget.FailEventWidget;
 import org.netbeans.jbatch.modeler.core.widget.FlowElementWidget;
 import org.netbeans.jbatch.modeler.core.widget.FlowNodeWidget;
 import org.netbeans.jbatch.modeler.core.widget.FlowWidget;
 import org.netbeans.jbatch.modeler.core.widget.GatewayWidget;
 import org.netbeans.jbatch.modeler.core.widget.SequenceFlowWidget;
-import org.netbeans.jbatch.modeler.core.widget.SplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.SplitterInputConnectionWidget;
+import org.netbeans.jbatch.modeler.core.widget.SplitterOutputConnectionWidget;
+import org.netbeans.jbatch.modeler.core.widget.StartEventWidget;
 import org.netbeans.jbatch.modeler.core.widget.StepWidget;
+import org.netbeans.jbatch.modeler.core.widget.StopEventWidget;
 import org.netbeans.jbatch.modeler.generator.ui.GenerateCodeDialog;
 import org.netbeans.jbatch.modeler.source.generator.task.SourceCodeGeneratorTask;
 import org.netbeans.jbatch.modeler.spec.Batchlet;
 import org.netbeans.jbatch.modeler.spec.Chunk;
 import org.netbeans.jbatch.modeler.spec.Decision;
+import org.netbeans.jbatch.modeler.spec.End;
+import org.netbeans.jbatch.modeler.spec.Fail;
 import org.netbeans.jbatch.modeler.spec.Flow;
 import org.netbeans.jbatch.modeler.spec.ItemProcessor;
 import org.netbeans.jbatch.modeler.spec.ItemReader;
@@ -44,16 +54,28 @@ import org.netbeans.jbatch.modeler.spec.ItemWriter;
 import org.netbeans.jbatch.modeler.spec.Job;
 import org.netbeans.jbatch.modeler.spec.Listeners;
 import org.netbeans.jbatch.modeler.spec.Properties;
-import org.netbeans.jbatch.modeler.spec.Split;
 import org.netbeans.jbatch.modeler.spec.Step;
+import org.netbeans.jbatch.modeler.spec.Stop;
+import org.netbeans.jbatch.modeler.spec.core.BatchArtifactLoader;
+import org.netbeans.jbatch.modeler.spec.core.Converge;
+import org.netbeans.jbatch.modeler.spec.core.Definitions;
+import org.netbeans.jbatch.modeler.spec.core.Diverge;
 import org.netbeans.jbatch.modeler.spec.core.FlowElement;
 import org.netbeans.jbatch.modeler.spec.core.FlowNode;
 import org.netbeans.jbatch.modeler.spec.core.SequenceFlow;
+import org.netbeans.jbatch.modeler.spec.core.SplitterInputConnection;
+import org.netbeans.jbatch.modeler.spec.core.SplitterOutputConnection;
+import org.netbeans.jbatch.modeler.spec.core.Start;
 import org.netbeans.jbatch.modeler.spec.design.BatchDiagram;
 import org.netbeans.jbatch.modeler.specification.model.job.util.JobUtil;
 import org.netbeans.modeler.config.element.ElementConfigFactory;
 import org.netbeans.modeler.core.exception.InvalidElmentException;
 import org.netbeans.modeler.core.scene.ModelerScene;
+import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.entity.ComboBoxValue;
+import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.listener.ActionHandler;
+import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.listener.ComboBoxListener;
+import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.support.ComboBoxPropertySupport;
+import org.netbeans.modeler.properties.nentity.NEntityPropertySupport;
 import org.netbeans.modeler.specification.model.document.IDefinitionElement;
 import org.netbeans.modeler.specification.model.document.IDiagramElement;
 import org.netbeans.modeler.specification.model.document.IRootElement;
@@ -96,12 +118,59 @@ public class JobScene extends ModelerScene {
         IDefinitionElement definitionElement = this.getModelerFile().getDefinitionElement();
         elementConfigFactory.createPropertySet(set, definitionElement, getPropertyChangeListeners());
         Job jobSpec = (Job) rootElement;
-        set.put("JOB_PROP", JobUtil.addProperty(this.getModelerFile(), jobSpec.getProperties()));
+        set.put("JOB_PROP", new NEntityPropertySupport(this.getModelerFile(), JobUtil.addProperty(jobSpec.getProperties())));
         set.put("JOB_PROP", JobUtil.addListener(this.getModelerFile(), jobSpec.getListeners()));
+        set.put("BASIC_PROP", getBatchArtifactLoaderProperty());
     }
 
-    @Override
-    public void manageLayerWidget() {
+    private ComboBoxPropertySupport getBatchArtifactLoaderProperty() {
+        final Definitions definitionsSpec = (Definitions) this.getModelerFile().getDefinitionElement();
+        ComboBoxListener comboBoxListener = new ComboBoxListener() {
+            @Override
+            public void setItem(ComboBoxValue value) {
+                BatchArtifactLoader batchArtifactLoaderType = (BatchArtifactLoader) value.getValue();
+                if (batchArtifactLoaderType != null) {
+                    definitionsSpec.setBatchArtifactLoaderType(batchArtifactLoaderType);
+                } else {
+                    definitionsSpec.setBatchArtifactLoaderType(BatchArtifactLoader.THREAD_CONTEXT_CLASS_LOADER);
+                }
+            }
+
+            @Override
+            public ComboBoxValue getItem() {
+                if (definitionsSpec.getBatchArtifactLoaderType() == BatchArtifactLoader.IMPLEMENTATION_SPECIFIC_LOADER) {
+                    return new ComboBoxValue(BatchArtifactLoader.IMPLEMENTATION_SPECIFIC_LOADER, "Implementation Specific Loader");
+                } else if (definitionsSpec.getBatchArtifactLoaderType() == BatchArtifactLoader.ARCHIVE_LOADER) {
+                    return new ComboBoxValue(BatchArtifactLoader.ARCHIVE_LOADER, "Archive Loader");
+                } else {
+                    return new ComboBoxValue(BatchArtifactLoader.THREAD_CONTEXT_CLASS_LOADER, "Thread Context Class Loader");
+                }
+            }
+
+            @Override
+            public List<ComboBoxValue> getItemList() {
+                List<ComboBoxValue> values = new ArrayList<ComboBoxValue>();
+                values.add(new ComboBoxValue(BatchArtifactLoader.IMPLEMENTATION_SPECIFIC_LOADER, "Implementation Specific Loader"));
+                values.add(new ComboBoxValue(BatchArtifactLoader.ARCHIVE_LOADER, "Archive Loader"));
+                values.add(new ComboBoxValue(BatchArtifactLoader.THREAD_CONTEXT_CLASS_LOADER, "Thread Context Class Loader"));
+                return values;
+            }
+
+            @Override
+            public String getDefaultText() {
+                return "Thread Context Class Loader";
+            }
+
+            @Override
+            public ActionHandler getActionHandler() {
+                return null;
+            }
+        };
+        return new ComboBoxPropertySupport(this.getModelerFile(), "batchArtifactLoader", "Batch Artifact Loader Type", "", comboBoxListener);
+    }
+
+//    @Override
+//    public void manageLayerWidget() {
 //        for (ArtifactWidget artifact : this.getArtifacts()) {//Artifact_Commneted
 //            if (artifact instanceof GroupWidget) {
 //                ((GroupWidget) artifact).bringToBack();
@@ -109,9 +178,8 @@ public class JobScene extends ModelerScene {
 //                ((TextAnnotationWidget) artifact).bringToFront();
 //            }
 //        }
-        super.manageLayerWidget();
-    }
-
+//        super.manageLayerWidget();
+//    }
     /**
      * @return the flowElements
      */
@@ -406,16 +474,16 @@ public class JobScene extends ModelerScene {
                                 step.getChunk().getProcessor().setProperties(new Properties());
                                 step.getChunk().setWriter(new ItemWriter());
                                 step.getChunk().getWriter().setProperties(new Properties());
-                            }else {
+                            } else {
                                 throw new InvalidElmentException("Invalid Batch Element : " + baseElement);
                             }
                             baseElement = step;
-                        }else if (baseElementWidget instanceof FlowWidget) {
-                                Flow flow = new Flow();
-                                flow.setKey(baseElementId);
-                                baseElement = flow;
+                        } else if (baseElementWidget instanceof FlowWidget) {
+                            Flow flow = new Flow();
+                            flow.setKey(baseElementId);
+                            baseElement = flow;
                         } else {
-                                throw new InvalidElmentException("Invalid Batch Element : " + baseElement);
+                            throw new InvalidElmentException("Invalid Batch Element : " + baseElement);
                         }
 //                        else if (baseElementWidget instanceof SubProcessWidget) {//Sub_Commented
 //                            if (baseElementWidget instanceof DefaultSubProcessWidget) {
@@ -429,9 +497,27 @@ public class JobScene extends ModelerScene {
 //                                baseElement = new TAdHocSubProcess();
 //                            }
 //                        }
+                    } else if (baseElementWidget instanceof EventWidget) {
+                        if (baseElementWidget instanceof StartEventWidget) {
+                            baseElement = new Start();
+                        } else if (baseElementWidget instanceof FailEventWidget) {
+                            baseElement = new Fail();
+                        } else if (baseElementWidget instanceof StopEventWidget) {
+                            baseElement = new Stop();
+                        } else if (baseElementWidget instanceof EndEventWidget) {
+                            baseElement = new End();
+                        } else {
+                            throw new InvalidElmentException("Invalid Batch Event Element : " + baseElement);
+                        }
                     } else if (baseElementWidget instanceof GatewayWidget) {
-                        if (baseElementWidget instanceof SplitGatewayWidget) {
-                            baseElement = new Split();
+                        if (baseElementWidget instanceof DivergeSplitGatewayWidget) {
+                            Diverge diverge = new Diverge();
+                            diverge.setKey(baseElementId + "_split"); //+ "_split" is used to differentiat split and diverge object id in Job Object
+                            baseElement = diverge;
+                        } else if (baseElementWidget instanceof ConvergeSplitGatewayWidget) {
+                            Converge converge = new Converge();
+                            converge.setKey(baseElementId);
+                            baseElement = converge;
                         } else if (baseElementWidget instanceof DecisionGatewayWidget) {
                             Decision decision = new Decision();
                             decision.setKey(baseElementId);
@@ -439,9 +525,17 @@ public class JobScene extends ModelerScene {
                         } else {
                             throw new InvalidElmentException("Invalid Batch Gateway Element : " + baseElement);
                         }
+                    } else {
+                        throw new InvalidElmentException("Invalid Batch Element");
                     }
                 } else if (baseElementWidget instanceof SequenceFlowWidget) {
-                    baseElement = new SequenceFlow();
+                    if (baseElementWidget instanceof SplitterInputConnectionWidget) {
+                        baseElement = new SplitterInputConnection();
+                    } else if (baseElementWidget instanceof SplitterOutputConnectionWidget) {
+                        baseElement = new SplitterOutputConnection();
+                    } else {
+                        baseElement = new SequenceFlow();
+                    }
                 } else {
                     throw new InvalidElmentException("Invalid Batch Element");
                 }
@@ -576,13 +670,18 @@ public class JobScene extends ModelerScene {
                     SourceCodeGeneratorTask task = new SourceCodeGeneratorTask(JobScene.this.getModelerFile(), dialog.getTargetPoject(), dialog.getSourceGroup());
                     processor.post(task);
                 }
-
             }
         });
         menuList.add(0, generateCode);
         menuList.add(1, null);
-
         return menuList;
+    }
+
+    @Override
+    public void manageLayerWidget() {
+        getConnectionLayer().bringToFront();
+        getMainLayer().bringToFront();
+        getLabelLayer().bringToFront();
     }
 
 }

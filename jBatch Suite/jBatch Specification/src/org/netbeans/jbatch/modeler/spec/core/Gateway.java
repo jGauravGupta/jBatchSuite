@@ -15,6 +15,24 @@
  */
 package org.netbeans.jbatch.modeler.spec.core;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 public class Gateway extends FlowNode {
 
+    @XmlAttribute(name = "key")
+    private String key;//custom added
+
+    /**
+     * @return the key
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * @param key the key to set
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

@@ -15,6 +15,14 @@
  */
 package org.netbeans.jbatch.modeler.widget.connection.relation;
 
+import org.netbeans.jbatch.modeler.core.widget.ConvergeSplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.DivergeSplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.EndEventWidget;
+import org.netbeans.jbatch.modeler.core.widget.FlowWidget;
+import org.netbeans.jbatch.modeler.core.widget.SplitGatewayWidget;
+import org.netbeans.jbatch.modeler.core.widget.SplitterInputConnectionWidget;
+import org.netbeans.jbatch.modeler.core.widget.StartEventWidget;
+import org.netbeans.jbatch.modeler.core.widget.StepWidget;
 import org.netbeans.modeler.widget.connection.relation.IRelationProxy;
 import org.netbeans.modeler.widget.connection.relation.IRelationValidator;
 
@@ -25,10 +33,6 @@ import org.netbeans.modeler.widget.connection.relation.IRelationValidator;
 public class RelationValidator implements IRelationValidator {
 
     /**
-     *
-     */
-    /**
-     *
      * Called to validate the proposed relationship. Calling this method will
      * result in the firing of the IRelationValidatorEventsSink methods.
      *
@@ -39,23 +43,74 @@ public class RelationValidator implements IRelationValidator {
      */
     @Override
     public boolean validateRelation(IRelationProxy proxy) {
-        boolean valid = true;
         if (proxy.getTarget() == proxy.getSource()) {
-            valid = false;
+            return false;
+        } else if (proxy.getTarget() instanceof StartEventWidget || proxy.getSource() instanceof EndEventWidget) {
+            return false;
+        } else if (proxy.getSource() instanceof StartEventWidget && proxy.getTarget() instanceof EndEventWidget) {
+            return false;
+        } else if (proxy.getSource() instanceof SplitGatewayWidget && proxy.getTarget() instanceof SplitGatewayWidget) {
+            return false;
         }
-//        else if (proxy.getTarget() instanceof StartEventWidget) {
-//            valid = false;
-//            //proxy.getTarget().setStatus(NodeWidgetStatus.INVALID);
-//        } else if (proxy.getSource() instanceof EndEventWidget) {
-//            valid = false;
-//        }else if (proxy.getSource() instanceof GroupWidget && !(proxy.getTarget() instanceof TextAnnotationWidget)) {
-//            valid = false;
-//        }else if (proxy.getTarget() instanceof GroupWidget && !(proxy.getSource() instanceof TextAnnotationWidget)) {
-//            valid = false;
-//        }else if (proxy.getTarget() instanceof ConversationNodeWidget && proxy.getSource() instanceof ConversationNodeWidget) {
-//            valid = false;
-//        }
 
-        return valid;
+        if (proxy.getSource() instanceof StepWidget) {
+            StepWidget stepWidget = (StepWidget) proxy.getSource();
+            if (!stepWidget.getOutgoingSequenceFlows().isEmpty()) {
+                return false;
+            }
+        } else if (proxy.getSource() instanceof FlowWidget) {
+            FlowWidget sourceFlowWidget = (FlowWidget) proxy.getSource();
+            if (sourceFlowWidget.isAddedToSplitter()) {
+                return false;
+            }
+        } else if (proxy.getSource() instanceof DivergeSplitGatewayWidget) {
+            if (proxy.getTarget() instanceof FlowWidget) {
+                FlowWidget flowWidget = (FlowWidget) proxy.getTarget();
+                if (!flowWidget.getIncomingSequenceFlows().isEmpty()) { //is not connected to any other
+                    return false;
+                }
+//                for (SequenceFlowWidget sequenceFlowWidget : flowWidget.getOutgoingSequenceFlows()) {
+//                    if (!(sequenceFlowWidget instanceof SplitterOutputConnectionWidget)) {
+//                        return false;
+//                    }
+//                }
+                if (flowWidget.isAddedToSplitter()) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+        }
+
+        if (proxy.getTarget() instanceof FlowWidget) {
+            FlowWidget targetFlowWidget = (FlowWidget) proxy.getTarget();
+            if (targetFlowWidget.isAddedToSplitter()) {
+                return false;
+            }
+        } else if (proxy.getTarget() instanceof ConvergeSplitGatewayWidget) {
+            if (proxy.getSource() instanceof FlowWidget) {
+                FlowWidget flowWidget = (FlowWidget) proxy.getSource();
+                if (!flowWidget.getOutgoingSequenceFlows().isEmpty()) { //is not connected to any other
+                    return false;
+                }
+                if (flowWidget.isAddedToSplitter()) {
+                    return false;
+                } else if (!flowWidget.getIncomingSequenceFlows().isEmpty() && !(flowWidget.getIncomingSequenceFlows().get(0) instanceof SplitterInputConnectionWidget)) {
+                    return false;
+                }
+//                if (!flowWidget.getOutgoingSequenceFlows().isEmpty()) {
+//                    return false;
+//                }
+//                for (SequenceFlowWidget sequenceFlowWidget : flowWidget.getIncomingSequenceFlows()) {
+//                    if (!(sequenceFlowWidget instanceof SplitterInputConnectionWidget)) {
+//                        return false;
+//                    }
+//                }
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:svg="http://www.w3.org/2000/svg"
+     xmlns="http://www.w3.org/2000/svg"
+     version="1.0"
+     width="41" height="102">
+    
+    <defs>
+        <filter id="blur-effect">
+            <feGaussianBlur stdDeviation="0.8" />
+        </filter>
+        <linearGradient id="outer-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop id="outer-start-grad" offset="0%" style="stop-color:RGB(160, 183, 211);stop-opacity:1" />
+            <stop id="outer-end-grad" offset="100%" style="stop-color:RGB(108,142,183);stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="inner-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop id="inner-start-grad" offset="0%" style="stop-color:RGB(30,69,123);stop-opacity:1" />
+            <stop id="inner-end-grad" offset="100%" style="stop-color:RGB(30,69,123);stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <g>
+        <defs>
+            <radialGradient id="background" cx="10%" cy="10%" r="100%" fx="10%" fy="10%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+                <stop id="fill_el" offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+            </radialGradient>
+        </defs>
+	
+        <g id="outer" stroke="RGB(108,142,183)" fill="url(#outer-grad)" stroke-width="1" >
+           <rect id="OUTLINE" x="1" y="31" width="8" height="40" rx="0" ry="0" fill="none" stroke="none"/>
+              <path d="m -0.0356,46.0168 1.2980784,0 0,-14.2668 7.6,0 0,14.2668 1.1234008,0.0024 -0.00248,8.528412 -1.120926,0.0024 0,14.2 -7.6,0 0,-14.2 -1.2800772,4e-4 -0.018,-8.533604 z"/>
+            <path  d="M 40,8.5125 28.1,0 l 0,4.725 c -1.31534,0.00969 -2.610892,0.120992 -3.875,0.3125 l 1.1375,7.5125 c 0.893984,-0.134368 1.808488,-0.215372 2.7375,-0.225 l 0,4.7 L 40,8.5125 z M 22.6875,13.1375 20.5,5.875 c -1.225217,0.369476 -2.417256,0.8186636 -3.5625,1.35 l 3.1875,6.8875 c 0.825032,-0.382416 1.679312,-0.710528 2.5625,-0.975 z m -4.9,2.275 L 13.675,9.025 C 9.2183412,11.899108 5.6559112,16.043448 3.5125,20.95 l 6.9625,3.0375 c 1.541757,-3.532724 4.102624,-6.509264 7.3125,-8.575 z m -8.2,11.1 -7.325,-2.05 C 1.9382112,25.622318 1.6939272,26.808884 1.525,28.025 l 7.525,1.05 c 0.1229248,-0.873792 0.3041992,-1.728528 0.5375,-2.5625 z"     />
+            <path d="M 40,91.9625 28.1,83.45 l 0,4.725 c -0.929012,-0.0096 -1.843516,-0.09063 -2.7375,-0.225 l -1.1375,7.5125 c 1.264108,0.191512 2.55966,0.302788 3.875,0.3125 l 0,4.7 11.9,-8.5125 z m -17.3125,-4.6 c -0.883188,-0.264472 -1.737468,-0.592584 -2.5625,-0.975 l -3.1875,6.8875 c 1.145244,0.531336 2.337283,0.980524 3.5625,1.35 l 2.1875,-7.2625 z m -4.9,-2.275 C 14.577624,83.021764 12.016757,80.045228 10.475,76.5125 L 3.5125,79.55 c 2.1434112,4.906548 5.7058412,9.050892 10.1625,11.925 l 4.1125,-6.3875 z m -8.2,-11.1 C 9.3541992,73.153528 9.1729248,72.298792 9.05,71.425 l -7.525,1.05 c 0.1689272,1.216112 0.4132112,2.402684 0.7375,3.5625 l 7.325,-2.05 z"     />
+        </g>
+        <g id="inner" stroke="RGB(30,69,123)" fill="url(#inner-grad)"  stroke-width="1">
+        </g>
+        
+        <text id="text_name" x="26" y="26" />
+	
+    </g>
+</svg>

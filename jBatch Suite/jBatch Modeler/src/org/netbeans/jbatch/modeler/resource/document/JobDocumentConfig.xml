@@ -35,7 +35,7 @@
                 </inner-shape>
             </shape-design>
         </document> 
-              <document id="Flow_Container" widget="org.netbeans.jbatch.modeler.core.widget.FlowWidget" specification="org.netbeans.jbatch.modeler.spec.Flow" documentModel="CONTAINER" >
+        <document id="Flow_Container" widget="org.netbeans.jbatch.modeler.core.widget.FlowWidget" specification="org.netbeans.jbatch.modeler.spec.Flow" documentModel="CONTAINER" >
             <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/FLOW.svg</container-document>
             <bounds>
                 <width value="80.0" min="60.0" max="298.0"/>
@@ -69,17 +69,16 @@
                 </inner-shape>
             </shape-design>
         </document>
-       
-         <document id="Split_Gateway" widget="org.netbeans.jbatch.modeler.core.widget.SplitGatewayWidget" specification="org.netbeans.jbatch.modeler.spec.Split" flowDimension="INTERMIDATE_CATCH" documentModel="GATEWAY" >
-            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/SPLIT.svg</container-document>
+        <document id="Diverge_Split_Gateway" widget="org.netbeans.jbatch.modeler.core.widget.DivergeSplitGatewayWidget" specification="org.netbeans.jbatch.modeler.spec.core.Diverge" flowDimension="INTERMIDATE_THROW" documentModel="GATEWAY" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/DIVERGE.svg</container-document>
             <bounds>
-                <width value="42.0" min="35.0" max="180.0"/>
-                <height value="42.0" min="35.0" max="180.0"/>
+                <width value="41.0" min="20.0" max="120.0"/>
+                <height value="102.0" min="50.0" max="300.0"/>
             </bounds>
             <shape-design>
                 <outer-shape>
-                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
-                    <border color="RGB(108,142,183)" width="1.5"/>
+                    <background start-color="RGB(160,183,211)" end-color="RGB(108,142,183)"/>
+                    <border color="RGB(108,142,183)" width="1"/>
                 </outer-shape>
                 <inner-shape>
                     <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
@@ -87,6 +86,91 @@
                 </inner-shape>
             </shape-design>
         </document>
-       
+        <document id="Converge_Split_Gateway" widget="org.netbeans.jbatch.modeler.core.widget.ConvergeSplitGatewayWidget" specification="org.netbeans.jbatch.modeler.spec.core.Converge" flowDimension="INTERMIDATE_CATCH" documentModel="GATEWAY" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/CONVERGE.svg</container-document>
+            <bounds>
+                <width value="41.0" min="20.0" max="120.0"/>
+                <height value="102.0" min="50.0" max="300.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(160,183,211)" end-color="RGB(108,142,183)"/>
+                    <border color="RGB(108,142,183)" width="1"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(30,69,123)" width="3.9"/>
+                </inner-shape>
+            </shape-design>
+        </document>
+        <document id="Start_Event" widget="org.netbeans.jbatch.modeler.core.widget.StartEventWidget" specification="org.netbeans.jbatch.modeler.spec.core.Start" flowDimension="START" documentModel="EVENT" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/START.svg</container-document>
+            <bounds>
+                <width value="42.0" min="35.0" max="180.0"/>
+                <height value="42.0" min="35.0" max="180.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="1.0"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(255,248,159)"/>
+                    <border color="RGB(30,69,123)" width="1"/>
+                </inner-shape>
+            </shape-design>
+        </document>
+                <document id="Fail_Event" widget="org.netbeans.jbatch.modeler.core.widget.FailEventWidget" specification="org.netbeans.jbatch.modeler.spec.Fail" flowDimension="END" documentModel="EVENT" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/FAIL.svg</container-document>
+            <bounds>
+                <width value="42.0" min="35.0" max="180.0"/>
+                <height value="42.0" min="35.0" max="180.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="3"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(30,69,123)" end-color="RGB(30,69,123)"/>
+                    <border color="RGB(30,69,123)" width="5"/>
+                </inner-shape>
+            </shape-design>
+        </document>
+                <document id="Stop_Event" widget="org.netbeans.jbatch.modeler.core.widget.StopEventWidget" specification="org.netbeans.jbatch.modeler.spec.Stop" flowDimension="END" documentModel="EVENT" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/STOP.svg</container-document>
+             <bounds>
+                <width value="42.0" min="35.0" max="180.0"/>
+                <height value="42.0" min="35.0" max="180.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="3"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(30,69,123)" end-color="RGB(30,69,123)"/>
+                    <border color="RGB(30,69,123)" width="1"/>
+                </inner-shape>
+            </shape-design>
+        </document>
+                <document id="End_Event" widget="org.netbeans.jbatch.modeler.core.widget.EndEventWidget" specification="org.netbeans.jbatch.modeler.spec.End" flowDimension="END" documentModel="EVENT" >
+            <container-document>/org/netbeans/jbatch/modeler/resource/element/batch/END.svg</container-document>
+            <bounds>
+                <width value="42.0" min="35.0" max="180.0"/>
+                <height value="42.0" min="35.0" max="180.0"/>
+            </bounds>
+            <shape-design>
+                <outer-shape>
+                    <background start-color="RGB(255,255,255)" end-color="RGB(226,232,236)"/>
+                    <border color="RGB(108,142,183)" width="3"/>
+                </outer-shape>
+                <inner-shape>
+                    <background start-color="RGB(30,69,123)" end-color="RGB(30,69,123)"/>
+                    <border color="RGB(30,69,123)" width="1.4"/>
+                </inner-shape>
+            </shape-design>
+        </document>
+        
     </documents>
 </document-config>

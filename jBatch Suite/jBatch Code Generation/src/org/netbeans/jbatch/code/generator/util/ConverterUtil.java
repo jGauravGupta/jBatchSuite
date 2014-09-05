@@ -194,11 +194,14 @@ public class ConverterUtil {
     }
 
     public static void generateFile(String templateURI, String destinationDir, String _package, String named, String name) {
+        generateFile( templateURI,  destinationDir,  _package,  named,  name , new HashMap<String, Object>());
+    }
+    
+    public static void generateFile(String templateURI, String destinationDir, String _package, String named, String name , Map<String, Object> data) {
         try {
             Configuration cfg = new Configuration();
             cfg.setClassForTemplateLoading(ClassPathLoader.class, "");
             Template template = cfg.getTemplate(templateURI);
-            Map<String, Object> data = new HashMap<String, Object>();
             data.put("package", _package);
             data.put("named", named);
             data.put("name", name);

@@ -7,7 +7,9 @@
 package org.netbeans.jbatch.modeler.spec;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -16,8 +18,13 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.netbeans.jbatch.modeler.spec.core.BaseElement;
+import org.netbeans.jbatch.modeler.spec.core.Converge;
+import org.netbeans.jbatch.modeler.spec.core.Diverge;
 import org.netbeans.jbatch.modeler.spec.core.FlowNode;
 import org.netbeans.jbatch.modeler.spec.core.SequenceFlow;
+import org.netbeans.jbatch.modeler.spec.core.SplitterInputConnection;
+import org.netbeans.jbatch.modeler.spec.core.SplitterOutputConnection;
+import org.netbeans.jbatch.modeler.spec.core.Start;
 import org.netbeans.modeler.specification.model.document.IRootElement;
 import org.netbeans.modeler.specification.model.document.core.IBaseElement;
 
@@ -62,7 +69,7 @@ import org.netbeans.modeler.specification.model.document.core.IBaseElement;
 @XmlType(name = "Job", propOrder = {
     "properties",
     "listeners",
-    "decisionOrFlowOrSplit",
+    "flowNodes",//decisionOrFlowOrSplit
     "sequenceFlow"
 })
 public class Job extends BaseElement implements IRootElement {
@@ -73,10 +80,20 @@ public class Job extends BaseElement implements IRootElement {
         @XmlElement(name = "decision", type = Decision.class),
         @XmlElement(name = "flow", type = Flow.class),
         @XmlElement(name = "split", type = Split.class),
-        @XmlElement(name = "step", type = Step.class)
+        @XmlElement(name = "step", type = Step.class),
+        @XmlElement(name = "start", type = Start.class),//custom added for *.job as a widget not for JSL as a transition
+        @XmlElement(name = "fail", type = Fail.class),//custom added for *.job as a widget not for JSL as a transition
+        @XmlElement(name = "stop", type = Stop.class),//custom added for *.job as a widget not for JSL as a transition
+        @XmlElement(name = "end", type = End.class),//custom added for *.job as a widget not for JSL as a transition
+        @XmlElement(name = "converge", type = Converge.class),//custom added for *.job as a widget not for JSL as a transition
+        @XmlElement(name = "diverge", type = Diverge.class)//custom added for *.job as a widget not for JSL as a transition
     })
-    protected List<FlowNode> decisionOrFlowOrSplit = new ArrayList<FlowNode>();
-
+    protected List<FlowNode> flowNodes = new ArrayList<FlowNode>(); //decisionOrFlowOrSplit
+    @XmlElements({
+        @XmlElement(name = "sequenceFlow", type = SequenceFlow.class),
+        @XmlElement(name = "splitter-in", type = SplitterInputConnection.class),
+        @XmlElement(name = "splitter-out", type = SplitterOutputConnection.class)
+    })
     private List<SequenceFlow> sequenceFlow = new ArrayList<SequenceFlow>(); //Custom Added
 
     @XmlAttribute(name = "version", required = true)
@@ -143,33 +160,33 @@ public class Job extends BaseElement implements IRootElement {
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getDecisionOrFlowOrSplit().add(newItem);
+     *    getFlowNode().add(newItem);
      * </pre>
      *
      *
      * <p>
      * Objects of the following type(s) are allowed in the list null null null
      * null null null null null null null null null null null null null null
-     * null null null null     {@link Decision }
+     * null null null null null null null     {@link Decision }
      * {@link Flow }
      * {@link Split }
      * {@link Step }
      *
      *
      */
-    public List<FlowNode> getDecisionOrFlowOrSplit() {
-        if (decisionOrFlowOrSplit == null) {
-            decisionOrFlowOrSplit = new ArrayList<FlowNode>();
+    public List<FlowNode> getFlowNode() {
+        if (flowNodes == null) {
+            flowNodes = new ArrayList<FlowNode>();
         }
-        return this.decisionOrFlowOrSplit;
+        return this.flowNodes;
     }
 
     public List<Flow> getFlow() {
         List<Flow> flows = new ArrayList<Flow>();
-        if (decisionOrFlowOrSplit == null) {
-            decisionOrFlowOrSplit = new ArrayList<FlowNode>();
+        if (flowNodes == null) {
+            flowNodes = new ArrayList<FlowNode>();
         }
-        for (FlowNode flowNode : decisionOrFlowOrSplit) {
+        for (FlowNode flowNode : flowNodes) {
             if (flowNode instanceof Flow) {
                 flows.add((Flow) flowNode);
             }
@@ -177,12 +194,26 @@ public class Job extends BaseElement implements IRootElement {
         return flows;
     }
 
+    public void addFlow(Flow flow_In) {
+        if (flowNodes == null) {
+            flowNodes = new ArrayList<FlowNode>();
+        }
+        this.flowNodes.add(flow_In);
+    }
+
+    public void removeFlow(Flow flow_In) {
+        if (flowNodes == null) {
+            flowNodes = new ArrayList<FlowNode>();
+        }
+        this.flowNodes.remove(flow_In);
+    }
+
     public List<Decision> getDecision() {
         List<Decision> decisions = new ArrayList<Decision>();
-        if (decisionOrFlowOrSplit == null) {
-            decisionOrFlowOrSplit = new ArrayList<FlowNode>();
+        if (flowNodes == null) {
+            flowNodes = new ArrayList<FlowNode>();
         }
-        for (FlowNode flowNode : decisionOrFlowOrSplit) {
+        for (FlowNode flowNode : flowNodes) {
             if (flowNode instanceof Split) {
                 decisions.add((Decision) flowNode);
             }
@@ -192,10 +223,10 @@ public class Job extends BaseElement implements IRootElement {
 
     public List<Split> getSplit() {
         List<Split> splits = new ArrayList<Split>();
-        if (decisionOrFlowOrSplit == null) {
-            decisionOrFlowOrSplit = new ArrayList<FlowNode>();
+        if (flowNodes == null) {
+            flowNodes = new ArrayList<FlowNode>();
         }
-        for (FlowNode flowNode : decisionOrFlowOrSplit) {
+        for (FlowNode flowNode : flowNodes) {
             if (flowNode instanceof Split) {
                 splits.add((Split) flowNode);
             }
@@ -286,7 +317,7 @@ public class Job extends BaseElement implements IRootElement {
     @Override
     public void removeBaseElement(IBaseElement baseElement_In) {
         if (baseElement_In instanceof FlowNode) {
-            decisionOrFlowOrSplit.remove((FlowNode) baseElement_In);
+            flowNodes.remove((FlowNode) baseElement_In);
         } else if (baseElement_In instanceof SequenceFlow) {
             getSequenceFlow().remove((SequenceFlow) baseElement_In);
         }
@@ -295,16 +326,25 @@ public class Job extends BaseElement implements IRootElement {
     @Override
     public void addBaseElement(IBaseElement baseElement_In) {
         if (baseElement_In instanceof FlowNode) {
-            decisionOrFlowOrSplit.add((FlowNode) baseElement_In);
+            flowNodes.add((FlowNode) baseElement_In);
         } else if (baseElement_In instanceof SequenceFlow) {
             getSequenceFlow().add((SequenceFlow) baseElement_In);
         }
     }
 
     public FlowNode findFlowNode(String id) {
-        for (FlowNode flowNode : decisionOrFlowOrSplit) {
+        for (FlowNode flowNode : flowNodes) {
             if (flowNode.getId().equals(id)) {
                 return flowNode;
+            }
+        }
+        return null;
+    }
+
+    public SequenceFlow findSequenceFlow(String id) {
+        for (SequenceFlow sequenceFlow_TMP : sequenceFlow) {
+            if (sequenceFlow_TMP.getId().equals(id)) {
+                return sequenceFlow_TMP;
             }
         }
         return null;
@@ -338,4 +378,35 @@ public class Job extends BaseElement implements IRootElement {
         this.key = key;
     }
 
+    public Map<FlowNode, SequenceFlow> getTargets(FlowNode source) {
+        Map<FlowNode, SequenceFlow> targets = new HashMap<FlowNode, SequenceFlow>();
+        for (String id : source.getOutgoing()) {
+            SequenceFlow sequenceFlow = findSequenceFlow(id);
+            FlowNode flowNode = findFlowNode(sequenceFlow.getTargetRef());
+            if (flowNode != null) {
+                targets.put(flowNode, sequenceFlow);
+            }
+        }
+        return targets;
+    }
+
+    public Map<FlowNode, SequenceFlow> getTargets(String sourceFlowNodeId) {
+        return getTargets(findFlowNode(sourceFlowNodeId));
+    }
+
+    public Map<FlowNode, SequenceFlow> getSources(FlowNode source) {
+        Map<FlowNode, SequenceFlow> sources = new HashMap<FlowNode, SequenceFlow>();
+        for (String id : source.getIncoming()) {
+            SequenceFlow sequenceFlow = findSequenceFlow(id);
+            FlowNode flowNode = findFlowNode(sequenceFlow.getSourceRef());
+            if (flowNode != null) {
+                sources.put(flowNode, sequenceFlow);
+            }
+        }
+        return sources;
+    }
+
+    public Map<FlowNode, SequenceFlow> getSources(String sourceFlowNodeId) {
+        return getSources(findFlowNode(sourceFlowNodeId));
+    }
 }

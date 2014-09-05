@@ -25,6 +25,7 @@ import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.enti
 import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.listener.ActionHandler;
 import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.listener.ComboBoxListener;
 import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.support.ComboBoxPropertySupport;
+import org.netbeans.modeler.properties.nentity.NEntityPropertySupport;
 import org.netbeans.modeler.specification.model.document.IModelerScene;
 import org.netbeans.modeler.specification.model.document.property.ElementPropertySet;
 import org.netbeans.modeler.widget.node.info.NodeWidgetInfo;
@@ -44,13 +45,13 @@ public class ChunkWidget extends StepWidget {
         ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
         elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk(), getPropertyChangeListeners());
         elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk().getReader(), getPropertyChangeListeners());
-        set.put("READER_PROP", JobUtil.addProperty(this.getModelerScene().getModelerFile(), stepSpec.getChunk().getReader().getProperties()));
+        set.put("READER_PROP",new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getChunk().getReader().getProperties())));
 
         elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk().getProcessor(), getPropertyChangeListeners());
-        set.put("PROCESSOR_PROP", JobUtil.addProperty(this.getModelerScene().getModelerFile(), stepSpec.getChunk().getProcessor().getProperties()));
+        set.put("PROCESSOR_PROP", new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getChunk().getProcessor().getProperties())));
 
         elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk().getWriter(), getPropertyChangeListeners());
-        set.put("WRITER_PROP", JobUtil.addProperty(this.getModelerScene().getModelerFile(), stepSpec.getChunk().getWriter().getProperties()));
+        set.put("WRITER_PROP", new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getChunk().getWriter().getProperties())));
     }
 
     private ComboBoxPropertySupport getCheckPointPolicyProperty() {

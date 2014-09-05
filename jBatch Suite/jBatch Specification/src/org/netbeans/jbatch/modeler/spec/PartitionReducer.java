@@ -42,7 +42,7 @@ public class PartitionReducer {
 
     protected Properties properties;
     @XmlAttribute(name = "ref", required = true)
-    protected String ref;
+    protected String reducerRef;//ref
 
     /**
      * Gets the value of the properties property.
@@ -76,8 +76,8 @@ public class PartitionReducer {
      *     {@link String }
      *     
      */
-    public String getRef() {
-        return ref;
+    public String getReducerRef() {
+        return reducerRef;
     }
 
     /**
@@ -88,8 +88,8 @@ public class PartitionReducer {
      *     {@link String }
      *     
      */
-    public void setRef(String value) {
-        this.ref = value;
+    public void setReducerRef(String value) {
+        this.reducerRef = value;
     }
 
 }

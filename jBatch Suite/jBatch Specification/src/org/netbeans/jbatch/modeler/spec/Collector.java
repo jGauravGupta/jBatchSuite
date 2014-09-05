@@ -42,7 +42,7 @@ public class Collector {
 
     protected Properties properties;
     @XmlAttribute(name = "ref", required = true)
-    protected String ref;
+    protected String collectorRef;
 
     /**
      * Gets the value of the properties property.
@@ -76,8 +76,8 @@ public class Collector {
      *     {@link String }
      *     
      */
-    public String getRef() {
-        return ref;
+    public String getCollectorRef() {
+        return collectorRef;
     }
 
     /**
@@ -88,8 +88,8 @@ public class Collector {
      *     {@link String }
      *     
      */
-    public void setRef(String value) {
-        this.ref = value;
+    public void setCollectorRef(String value) {
+        this.collectorRef = value;
     }
 
 }

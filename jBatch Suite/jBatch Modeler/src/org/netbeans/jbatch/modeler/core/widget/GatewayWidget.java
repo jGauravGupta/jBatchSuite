@@ -19,12 +19,6 @@ import org.netbeans.modeler.specification.model.document.IModelerScene;
 import org.netbeans.modeler.specification.model.document.property.ElementPropertySet;
 import org.netbeans.modeler.widget.node.info.NodeWidgetInfo;
 
-/**
- *
- *
- *
- *
- */
 public class GatewayWidget extends FlowNodeWidget {
 
     public GatewayWidget(IModelerScene scene, NodeWidgetInfo node) {

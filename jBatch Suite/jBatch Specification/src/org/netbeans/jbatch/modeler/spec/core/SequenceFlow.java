@@ -19,12 +19,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import org.netbeans.modeler.specification.model.document.core.IFlowEdge;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sequenceFlow")
 @XmlRootElement(name = "sequenceFlow")
+@XmlSeeAlso({
+    SplitterConnection.class
+})
 public class SequenceFlow
         extends FlowElement implements IFlowEdge {
 
@@ -34,9 +38,7 @@ public class SequenceFlow
     protected String targetRef;//Object targetRef;
 
     @XmlAttribute
-    private String inputStatus;
-    @XmlAttribute
-    private String outputStatus;
+    private String on;
 
     /**
      * Gets the value of the sourceRef property.
@@ -79,31 +81,17 @@ public class SequenceFlow
     }
 
     /**
-     * @return the inputStatus
+     * @return the on
      */
-    public String getInputStatus() {
-        return inputStatus;
+    public String getOn() {
+        return on;
     }
 
     /**
-     * @param inputStatus the inputStatus to set
+     * @param on the inputStatus to set
      */
-    public void setInputStatus(String inputStatus) {
-        this.inputStatus = inputStatus;
-    }
-
-    /**
-     * @return the outputStatus
-     */
-    public String getOutputStatus() {
-        return outputStatus;
-    }
-
-    /**
-     * @param outputStatus the outputStatus to set
-     */
-    public void setOutputStatus(String outputStatus) {
-        this.outputStatus = outputStatus;
+    public void setOn(String on) {
+        this.on = on;
     }
 
 }

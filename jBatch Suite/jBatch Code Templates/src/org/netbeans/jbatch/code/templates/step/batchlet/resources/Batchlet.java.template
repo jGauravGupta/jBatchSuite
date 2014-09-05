@@ -39,7 +39,7 @@ public class ${name} extends AbstractBatchlet {
     @Override
     public String process() {
         System.out.println("Running inside a batchlet : ${name}");
-
+        // TODO code application logic here
         return "COMPLETED";
     }
 

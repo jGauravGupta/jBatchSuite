@@ -32,7 +32,8 @@ import org.netbeans.modeler.specification.model.document.core.IFlowNode;
 })
 @XmlSeeAlso({
     Gateway.class,
-    Activity.class
+    Activity.class,
+    Event.class
 })
 public abstract class FlowNode
         extends FlowElement implements IFlowNode {

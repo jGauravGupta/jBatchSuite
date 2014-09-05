@@ -38,6 +38,7 @@ public class BatchDiagram
     @XmlElement(name = "BatchLabelStyle")
     protected List<LabelStyle> batchLabelStyle;
 
+
     /**
      * Gets the value of the batchPlane property.
      *

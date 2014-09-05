@@ -64,7 +64,9 @@ import org.openide.util.Exceptions;
     "batchDiagram",})
 public class Definitions implements IDefinitionElement {
 
-    @XmlElement(/*namespace = "http://xmlns.jcp.org/xml/ns/javaee"*/)
+    @XmlAttribute
+    private BatchArtifactLoader batchArtifactLoaderType;
+    @XmlElement
     private Job job;
     @XmlElement(name = "batch-diagram", namespace = "http://jbatchsuite.java.net")
     private List<BatchDiagram> batchDiagram = new ArrayList<BatchDiagram>();
@@ -609,6 +611,23 @@ public class Definitions implements IDefinitionElement {
 
     public void removeGarbageDefinitions(String garbageDefinition) {
         this.garbageDefinitions.remove(garbageDefinition);
+    }
+
+    /**
+     * @return the batchArtifactLoaderType
+     */
+    public BatchArtifactLoader getBatchArtifactLoaderType() {
+        if (batchArtifactLoaderType == null) {
+            batchArtifactLoaderType = BatchArtifactLoader.THREAD_CONTEXT_CLASS_LOADER;
+        }
+        return batchArtifactLoaderType;
+    }
+
+    /**
+     * @param batchArtifactLoaderType the batchArtifactLoaderType to set
+     */
+    public void setBatchArtifactLoaderType(BatchArtifactLoader batchArtifactLoaderType) {
+        this.batchArtifactLoaderType = batchArtifactLoaderType;
     }
 
 }

@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Partition", propOrder = {
+    "runtimeMapping",
     "mapper",
     "plan",
     "collector",
@@ -48,6 +49,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Partition {
 
+    private Boolean runtimeMapping = false;
     protected PartitionMapper mapper;
     protected PartitionPlan plan;
     protected Collector collector;
@@ -172,6 +174,20 @@ public class Partition {
      */
     public void setReducer(PartitionReducer value) {
         this.reducer = value;
+    }
+
+    /**
+     * @return the runtimeMapping
+     */
+    public Boolean getRuntimeMapping() {
+        return runtimeMapping;
+    }
+
+    /**
+     * @param runtimeMapping the runtimeMapping to set
+     */
+    public void setRuntimeMapping(Boolean runtimeMapping) {
+        this.runtimeMapping = runtimeMapping;
     }
 
 }

@@ -49,6 +49,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>org.netbeans.jbatch.modeler.archive.loader.spec</package>
                 <package>org.netbeans.jbatch.modeler.spec</package>
                 <package>org.netbeans.jbatch.modeler.spec.core</package>
                 <package>org.netbeans.jbatch.modeler.spec.def</package>

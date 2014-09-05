@@ -21,8 +21,10 @@ package ${package};
 </#if>
 <#assign interface = [] >
 <#if mapper == true>
+import java.util.Properties;
 import javax.batch.api.partition.PartitionMapper;
 import javax.batch.api.partition.PartitionPlan;
+import javax.batch.api.partition.PartitionPlanImpl;
 <#assign interface = interface + ["PartitionMapper"]>
 </#if>
 <#if reducer == true>
@@ -59,7 +61,31 @@ public class ${name} implements <#list interface as x>${x}<#if x_has_next>, </#i
 <#if mapper == true>
     @Override
     public PartitionPlan mapPartitions() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        // default PartitionPlan Implementation Object
+        return new PartitionPlanImpl() { // TODO code application logic here 
+
+            @Override
+            public int getPartitions() {
+                return 2;
+            }
+
+            @Override
+            public int getThreads() {
+                return 2;
+            }
+
+            @Override
+            public Properties[] getPartitionProperties() {
+                Properties[] props = new Properties[getPartitions()];
+                
+                for (int i=0; i<getPartitions(); i++) {
+                    props[i] = new Properties();
+                    props[i].setProperty("start", String.valueOf(i*10+1));
+                    props[i].setProperty("end", String.valueOf((i+1)*10));
+                }
+                return props;
+            }
+        }; 
     }
 </#if>
 <#if reducer == true>
@@ -87,7 +113,8 @@ public class ${name} implements <#list interface as x>${x}<#if x_has_next>, </#i
 
     @Override
     public Serializable collectPartitionData() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        System.out.println("collectPartitionData");
+        return new Serializable() {};
     }
 </#if>
 <#if analyzer == true>

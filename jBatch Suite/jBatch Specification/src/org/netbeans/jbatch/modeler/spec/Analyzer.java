@@ -42,7 +42,7 @@ public class Analyzer {
 
     protected Properties properties;
     @XmlAttribute(name = "ref", required = true)
-    protected String ref;
+    protected String analyzerRef;
 
     /**
      * Gets the value of the properties property.
@@ -76,8 +76,8 @@ public class Analyzer {
      *     {@link String }
      *     
      */
-    public String getRef() {
-        return ref;
+    public String getAnalyzerRef() {
+        return analyzerRef;
     }
 
     /**
@@ -88,8 +88,8 @@ public class Analyzer {
      *     {@link String }
      *     
      */
-    public void setRef(String value) {
-        this.ref = value;
+    public void setAnalyzerRef(String value) {
+        this.analyzerRef = value;
     }
 
 }

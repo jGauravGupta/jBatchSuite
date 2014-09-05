@@ -17,25 +17,23 @@ package org.netbeans.jbatch.modeler.widget.properties.user_interface.property;
 
 import javax.swing.JOptionPane;
 import org.netbeans.jbatch.modeler.spec.Property;
-import org.netbeans.modeler.core.ModelerFile;
 import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.entity.Entity;
 import org.netbeans.modeler.properties.entity.custom.editor.combobox.client.entity.RowValue;
 import org.netbeans.modeler.properties.entity.custom.editor.combobox.internal.EntityComponent;
 
 public class PropertyPanel extends EntityComponent<Property> {
 
-    private ModelerFile modelerFile;
     private Property property;
     private Boolean isNew;
 
     /**
      * Creates new form CreateMessagePanel
      */
-    public PropertyPanel(ModelerFile modelerFile) {
+    public PropertyPanel() {
         super("", true);
-        this.modelerFile = modelerFile;
         initComponents();
     }
+    
 
     @Override
     public void init() {

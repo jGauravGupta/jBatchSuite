@@ -19,7 +19,6 @@ import org.netbeans.jbatch.modeler.job.file.JobFileDataObject;
 import org.netbeans.jbatch.modeler.job.file.action.JobFileActionListener;
 import org.netbeans.jbatch.modeler.spec.Flow;
 import org.netbeans.jbatch.modeler.spec.core.Definitions;
-import org.netbeans.modeler.core.ModelerCore;
 import org.netbeans.modeler.core.ModelerFile;
 import org.netbeans.modeler.specification.model.document.IModelerScene;
 import org.netbeans.modeler.specification.model.document.property.ElementPropertySet;
@@ -55,14 +54,23 @@ public class FlowWidget extends ActivityWidget {
         }
         fileAction.openModelerFile(flow.getId());
     }
-    
+
     @Override
-    public void destroy(){
-         ModelerFile modelerFile = this.getModelerScene().getModelerFile();
-         Definitions definitions = (Definitions)modelerFile.getDefinitionElement();
-         definitions.addGarbageDefinitions(this.getId());
-         
+    public void destroy() {
+        ModelerFile modelerFile = this.getModelerScene().getModelerFile();
+        Definitions definitions = (Definitions) modelerFile.getDefinitionElement();
+        definitions.addGarbageDefinitions(this.getId());
+
 //        closeDiagram();
-    }  
-    
+    }
+
+    public boolean isAddedToSplitter() {
+        if (this.getIncomingSequenceFlows().size() == 1 && this.getOutgoingSequenceFlows().size() == 1) {
+            if (this.getIncomingSequenceFlows().get(0) instanceof SplitterInputConnectionWidget
+                    && this.getOutgoingSequenceFlows().get(0) instanceof SplitterOutputConnectionWidget) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

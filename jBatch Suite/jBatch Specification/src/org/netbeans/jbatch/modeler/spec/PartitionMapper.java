@@ -42,7 +42,7 @@ public class PartitionMapper {
 
     protected Properties properties;
     @XmlAttribute(name = "ref", required = true)
-    protected String ref;
+    protected String mapperRef;
 
     /**
      * Gets the value of the properties property.
@@ -76,8 +76,8 @@ public class PartitionMapper {
      *     {@link String }
      *     
      */
-    public String getRef() {
-        return ref;
+    public String getMapperRef() {
+        return mapperRef;
     }
 
     /**
@@ -88,8 +88,8 @@ public class PartitionMapper {
      *     {@link String }
      *     
      */
-    public void setRef(String value) {
-        this.ref = value;
+    public void setMapperRef(String value) {
+        this.mapperRef = value;
     }
 
 }

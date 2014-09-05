@@ -11,11 +11,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.netbeans.jbatch.modeler.spec.core.Gateway;
 
 /**
@@ -49,11 +45,11 @@ import org.netbeans.jbatch.modeler.spec.core.Gateway;
 public class Split extends Gateway {
 
     protected List<Flow> flow;
-    @XmlAttribute(name = "id", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlID
-    @XmlSchemaType(name = "ID")
-    protected String id;
+//    @XmlAttribute(name = "id", required = true)
+//    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+//    @XmlID
+//    @XmlSchemaType(name = "ID")
+//    protected String id;
     @XmlAttribute(name = "next")
     protected String next;
 
@@ -85,26 +81,39 @@ public class Split extends Gateway {
         return this.flow;
     }
 
-    /**
-     * Gets the value of the id property.
-     *
-     * @return possible object is {@link String }
-     *
-     */
-    public String getId() {
-        return id;
+    public void addFlow(Flow flow_In) {
+        if (flow == null) {
+            flow = new ArrayList<Flow>();
+        }
+        this.flow.add(flow_In);
     }
 
-    /**
-     * Sets the value of the id property.
-     *
-     * @param value allowed object is {@link String }
-     *
-     */
-    public void setId(String value) {
-        this.id = value;
+    public void removeFlow(Flow flow_In) {
+        if (flow == null) {
+            flow = new ArrayList<Flow>();
+        }
+        this.flow.remove(flow_In);
     }
 
+//    /**
+//     * Gets the value of the id property.
+//     *
+//     * @return possible object is {@link String }
+//     *
+//     */
+//    public String getId() {
+//        return id;
+//    }
+//
+//    /**
+//     * Sets the value of the id property.
+//     *
+//     * @param value allowed object is {@link String }
+//     *
+//     */
+//    public void setId(String value) {
+//        this.id = value;
+//    }
     /**
      * Gets the value of the next property.
      *

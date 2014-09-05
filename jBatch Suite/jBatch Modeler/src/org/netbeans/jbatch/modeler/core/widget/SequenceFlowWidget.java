@@ -32,9 +32,11 @@ import org.netbeans.modeler.widget.context.ContextPaletteModel;
 import org.netbeans.modeler.widget.edge.EdgeWidget;
 import org.netbeans.modeler.widget.edge.info.EdgeWidgetInfo;
 import org.netbeans.modeler.widget.properties.customattr.CustomAttributeSupport;
+import org.netbeans.modeler.widget.properties.generic.ElementCustomPropertySupport;
 import org.netbeans.modeler.widget.properties.generic.ElementPropertySupport;
 import org.netbeans.modeler.widget.properties.handler.PropertyChangeListener;
 import org.openide.nodes.Sheet;
+import org.openide.util.Exceptions;
 
 public class SequenceFlowWidget extends EdgeWidget implements FlowEdgeWidget {
 
@@ -57,9 +59,30 @@ public class SequenceFlowWidget extends EdgeWidget implements FlowEdgeWidget {
 
     @Override
     public void createPropertySet(ElementPropertySet set) {
-        ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
-        elementConfigFactory.createPropertySet(set, this.getBaseElementSpec(), getPropertyChangeListeners());
-        set.put("OTHER_PROP", new CustomAttributeSupport(this.getModelerScene().getModelerFile(), this.getBaseElementSpec(), "Other Attributes", "Other Attributes of the BPMN Element"));
+        try {
+            ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
+            elementConfigFactory.createPropertySet(set, this.getBaseElementSpec(), getPropertyChangeListeners());
+
+            FlowNodeWidget sourceFlowNodeWidget = this.getSourceNode();
+            FlowNodeWidget targetFlowNodeWidget = this.getTargetNode();
+
+            if (sourceFlowNodeWidget instanceof DecisionGatewayWidget || targetFlowNodeWidget instanceof EventWidget) {
+                set.put("BASIC_PROP", new ElementCustomPropertySupport(this.getModelerScene().getModelerFile(), this.getBaseElementSpec(), String.class,
+                        "on", "On Status", "Specifies the exit status value that activates this element. Wildcards of \"*\" and \"?\" may be used. \"*\" matches zero or more characters. \"?\" matches exactly one character. It must match an exit status value in order to have effect. This is a required attribute.",
+                        new PropertyChangeListener<String>() {
+                            @Override
+                            public void changePerformed(String value) {
+                                // manageCompensationIcon();
+                            }
+                        }));
+            }
+
+            set.put("OTHER_PROP", new CustomAttributeSupport(this.getModelerScene().getModelerFile(), this.getBaseElementSpec(), "Other Attributes", "Other Attributes of the BPMN Element"));
+        } catch (NoSuchMethodException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (NoSuchFieldException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     /**

@@ -18,6 +18,7 @@ package org.netbeans.jbatch.modeler.core.widget;
 import org.netbeans.jbatch.modeler.spec.Step;
 import org.netbeans.jbatch.modeler.specification.model.job.util.JobUtil;
 import org.netbeans.modeler.config.element.ElementConfigFactory;
+import org.netbeans.modeler.properties.nentity.NEntityPropertySupport;
 import org.netbeans.modeler.specification.model.document.IModelerScene;
 import org.netbeans.modeler.specification.model.document.property.ElementPropertySet;
 import org.netbeans.modeler.widget.node.info.NodeWidgetInfo;
@@ -34,7 +35,7 @@ public class BatchletWidget extends StepWidget {
         ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
         elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getBatchlet(), getPropertyChangeListeners());
         Step stepSpec = (Step) this.getBaseElementSpec();
-        set.put("BASIC_PROP", JobUtil.addProperty(this.getModelerScene().getModelerFile(), stepSpec.getBatchlet().getProperties()));
+        set.put("BASIC_PROP",new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getBatchlet().getProperties())));
 
     }
 }
