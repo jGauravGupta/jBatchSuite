@@ -81,8 +81,7 @@ public class FlowNodeWidget extends NodeWidget implements FlowElementWidget, IFl
 
     @Override
     public void createPropertySet(ElementPropertySet set) {
-        ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
-        elementConfigFactory.createPropertySet(set, this.getBaseElementSpec(), getPropertyChangeListeners());
+        set.createPropertySet(this, this.getBaseElementSpec(), getPropertyChangeListeners());
         set.put("OTHER_PROP", new CustomAttributeSupport(this.getModelerScene().getModelerFile(), this.getBaseElementSpec(), "Other Attributes", "Other Attributes of the BPMN Element"));
     }
 

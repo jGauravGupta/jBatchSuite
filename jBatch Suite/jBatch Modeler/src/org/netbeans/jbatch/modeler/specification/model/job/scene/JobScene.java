@@ -113,10 +113,9 @@ public class JobScene extends ModelerScene {
     public void createPropertySet(ElementPropertySet set) {
 
         IRootElement rootElement = this.getModelerFile().getRootElement();
-        ElementConfigFactory elementConfigFactory = this.getModelerFile().getVendorSpecification().getElementConfigFactory();
-        elementConfigFactory.createPropertySet(set, rootElement, getPropertyChangeListeners());
+        set.createPropertySet( this , rootElement, getPropertyChangeListeners());
         IDefinitionElement definitionElement = this.getModelerFile().getDefinitionElement();
-        elementConfigFactory.createPropertySet(set, definitionElement, getPropertyChangeListeners());
+        set.createPropertySet( this , definitionElement, getPropertyChangeListeners());
         Job jobSpec = (Job) rootElement;
         set.put("JOB_PROP", new NEntityPropertySupport(this.getModelerFile(), JobUtil.addProperty(jobSpec.getProperties())));
         set.put("JOB_PROP", JobUtil.addListener(this.getModelerFile(), jobSpec.getListeners()));

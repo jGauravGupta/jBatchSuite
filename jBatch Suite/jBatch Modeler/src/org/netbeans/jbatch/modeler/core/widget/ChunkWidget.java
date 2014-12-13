@@ -42,15 +42,14 @@ public class ChunkWidget extends StepWidget {
         set.put("BASIC_PROP", getCheckPointPolicyProperty());
         Step stepSpec = (Step) this.getBaseElementSpec();
 
-        ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
-        elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk(), getPropertyChangeListeners());
-        elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk().getReader(), getPropertyChangeListeners());
+        set.createPropertySet( this , ((Step) this.getBaseElementSpec()).getChunk(), getPropertyChangeListeners());
+        set.createPropertySet( this , ((Step) this.getBaseElementSpec()).getChunk().getReader(), getPropertyChangeListeners());
         set.put("READER_PROP",new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getChunk().getReader().getProperties())));
 
-        elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk().getProcessor(), getPropertyChangeListeners());
+        set.createPropertySet( this , ((Step) this.getBaseElementSpec()).getChunk().getProcessor(), getPropertyChangeListeners());
         set.put("PROCESSOR_PROP", new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getChunk().getProcessor().getProperties())));
 
-        elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getChunk().getWriter(), getPropertyChangeListeners());
+        set.createPropertySet( this , ((Step) this.getBaseElementSpec()).getChunk().getWriter(), getPropertyChangeListeners());
         set.put("WRITER_PROP", new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getChunk().getWriter().getProperties())));
     }
 

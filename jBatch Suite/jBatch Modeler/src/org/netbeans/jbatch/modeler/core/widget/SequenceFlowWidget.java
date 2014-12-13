@@ -60,8 +60,7 @@ public class SequenceFlowWidget extends EdgeWidget implements FlowEdgeWidget {
     @Override
     public void createPropertySet(ElementPropertySet set) {
         try {
-            ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
-            elementConfigFactory.createPropertySet(set, this.getBaseElementSpec(), getPropertyChangeListeners());
+            set.createPropertySet( this , this.getBaseElementSpec(), getPropertyChangeListeners());
 
             FlowNodeWidget sourceFlowNodeWidget = this.getSourceNode();
             FlowNodeWidget targetFlowNodeWidget = this.getTargetNode();

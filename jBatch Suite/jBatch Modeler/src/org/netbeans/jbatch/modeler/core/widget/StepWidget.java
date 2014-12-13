@@ -87,7 +87,7 @@ public class StepWidget extends ActivityWidget {
     private final  PropertyChangeListener partitionChangeListener = new PropertyChangeListener<Boolean>() {
             @Override
             public void changePerformed(Boolean value) {
-              StepWidget.this.exploreProperties();
+              StepWidget.this.refreshProperties();
             }
         };
    
@@ -97,8 +97,7 @@ public class StepWidget extends ActivityWidget {
 
     @Override
     public void createPropertySet(ElementPropertySet set) {
-        ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
-        elementConfigFactory.createPropertySet(set, this.getBaseElementSpec(), getPropertyChangeListeners());
+        set.createPropertySet(this, this.getBaseElementSpec(), getPropertyChangeListeners());
         Step stepSpec = (Step) this.getBaseElementSpec();
         set.put("BASIC_PROP", new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getProperties())));
         set.put("BASIC_PROP", JobUtil.addListener(this.getModelerScene().getModelerFile(), stepSpec.getListeners()));

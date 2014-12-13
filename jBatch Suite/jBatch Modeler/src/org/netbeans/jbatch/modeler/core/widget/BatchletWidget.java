@@ -32,8 +32,7 @@ public class BatchletWidget extends StepWidget {
     @Override
     public void createPropertySet(ElementPropertySet set) {
         super.createPropertySet(set);
-        ElementConfigFactory elementConfigFactory = this.getModelerScene().getModelerFile().getVendorSpecification().getElementConfigFactory();
-        elementConfigFactory.createPropertySet(set, ((Step) this.getBaseElementSpec()).getBatchlet(), getPropertyChangeListeners());
+        set.createPropertySet(this, ((Step) this.getBaseElementSpec()).getBatchlet(), getPropertyChangeListeners());
         Step stepSpec = (Step) this.getBaseElementSpec();
         set.put("BASIC_PROP",new NEntityPropertySupport(this.getModelerScene().getModelerFile(),JobUtil.addProperty(stepSpec.getBatchlet().getProperties())));
 
