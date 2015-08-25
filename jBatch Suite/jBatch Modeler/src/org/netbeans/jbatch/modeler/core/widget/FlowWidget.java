@@ -42,16 +42,14 @@ public class FlowWidget extends ActivityWidget {
     public void openDiagram() {
         Flow flow = (Flow) this.getBaseElementSpec();
         String path = this.getModelerScene().getModelerPanelTopComponent().getToolTipText();
-        JobFileActionListener fileAction = new JobFileActionListener((JobFileDataObject) this.getModelerScene().getModelerFile().getModelerFileDataObject());
-        fileAction.setDefinitionId(flow.getId());
+        JobFileActionListener fileAction = new JobFileActionListener(this.getModelerScene().getModelerFile().getModelerFileDataObject());
+//        fileAction.setDefinitionId(flow.getId());
         if (flow.getName() == null || flow.getName().trim().isEmpty()) {
-            fileAction.setDefinitionTooltip(flow.getKey() + " > " + path);
-            fileAction.setDefinitionName(flow.getKey());
+            fileAction.openModelerFile(flow.getId(),flow.getKey(),flow.getKey() + " > " + path);
         } else {
-            fileAction.setDefinitionTooltip(flow.getName() + " > " + path);
-            fileAction.setDefinitionName(flow.getName());
+            fileAction.openModelerFile(flow.getId(),flow.getName(),flow.getName() + " > " + path);
         }
-        fileAction.openModelerFile(flow.getId());
+        
     }
 
     @Override

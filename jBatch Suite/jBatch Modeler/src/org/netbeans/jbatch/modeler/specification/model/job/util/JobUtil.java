@@ -197,11 +197,11 @@ public class JobUtil extends JavaBatchModelUtil {
     public void loadModelerFile(ModelerFile file) {
 
         IModelerScene scene = file.getModelerScene();
-        Definitions definition_Load = Definitions.load(file, (String) file.getAttribute("definitionId"));
+        Definitions definition_Load = Definitions.load(file,file.getId());
         if (definition_Load == null) {
             definition_Load = ((JobDiagramModel) file.getModelerDiagramModel()).getDefinitionsTemplate(file);
-            if (file.getAttribute("definitionId") != null) { //if flow then add defnition(flow) id
-                definition_Load.setId((String) file.getAttribute("definitionId"));
+            if (file.getId() != null) { //if flow then add defnition(flow) id
+                definition_Load.setId(file.getId());
             }
         }
 
