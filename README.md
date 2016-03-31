@@ -11,6 +11,10 @@ jBatch Suite allows the developers to design java batch application model and au
  - [Flow usage](https://www.youtube.com/watch?v=YXKcpnTxqz4)
  - [Decision & Transition](https://www.youtube.com/watch?v=2SRhE-wIgm4)
  - [Split & Concurrent Model](https://www.youtube.com/watch?v=VV4V0UrxFSA)
+ 
+ 
+<img src="http://plugins.netbeans.org/data/images/1405488760_1403118310_p2.png">
+ 
 
 ## Communication
 
