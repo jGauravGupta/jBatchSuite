@@ -1,14 +1,16 @@
-<img src="http://plugins.netbeans.org/data/images/1403118310_p1.png">
+
 
 # jBatch Suite [![][license img]][license]
 
 jBatch Suite allows the developers to design java batch application model and automates Java code generation(Java Batch 1.0) . Batch processing is typified by bulk-oriented, non-interactive, background execution. Frequently long-running, it may be data or computationally intensive, execute sequentially or in parallel, and may be initiated through various invocation models, including ad hoc, scheduled, and on-demand. 
 
+<img src="http://plugins.netbeans.org/data/images/1403118310_p1.png">
+
 ## JPA Modeler Video Demo <img src="https://forrst-live.s3.amazonaws.com/posts/snaps/111179/large.png?1317425412" alt="youtube" style="vertical-align:top;width:32px;height:32px;"></a></h2>
-[Installation , Batchlet & Chunk usage and Job XML & Source code generation](https://www.youtube.com/watch?v=bQt_mtH5Gd8&feature=youtu.be)
-[Flow usage](https://www.youtube.com/watch?v=YXKcpnTxqz4)
-[Decision & Transition](https://www.youtube.com/watch?v=2SRhE-wIgm4)
-[Split & Concurrent Model](https://www.youtube.com/watch?v=VV4V0UrxFSA)
+ - [Installation , Batchlet & Chunk usage and Job XML & Source code generation](https://www.youtube.com/watch?v=bQt_mtH5Gd8&feature=youtu.be)
+ - [Flow usage](https://www.youtube.com/watch?v=YXKcpnTxqz4)
+ - [Decision & Transition](https://www.youtube.com/watch?v=2SRhE-wIgm4)
+ - [Split & Concurrent Model](https://www.youtube.com/watch?v=VV4V0UrxFSA)
 
 ## Communication
 
